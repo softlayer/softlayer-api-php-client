@@ -64,7 +64,7 @@ ini_set("soap.wsdl_cache_enabled", "0");
  *     $account = $client->getObject();
  *     var_dump($account);
  * } catch (Exception $e) {
- *     die('Unable to retrieve account information: '.$e->getMessage());
+ *     die('Unable to retrieve account information: ' . $e->getMessage());
  * }
  *
  * ----------
@@ -92,7 +92,7 @@ ini_set("soap.wsdl_cache_enabled", "0");
  *     $ticket = $client->getObject();
  *     var_dump($ticket);
  * } catch (Exception $e) {
- *     die('Unable to retrieve ticket record: '.$e->getMessage());
+ *     die('Unable to retrieve ticket record: ' . $e->getMessage());
  * }
  *
  * // Update the ticket
@@ -101,9 +101,9 @@ ini_set("soap.wsdl_cache_enabled", "0");
  *
  * try {
  *     $update = $client->addUpdate($update);
- *     echo 'Updated ticket 123456. The new update\'s id is '.$update->id.'.');
+ *     echo 'Updated ticket 123456. The new update\'s id is ' . $update->id . '.');
  * } catch (Exception $e) {
- *     die('Unable to update ticket: '.$e->getMessage());
+ *     die('Unable to update ticket: ' . $e->getMessage());
  * }
  *
  * ----------

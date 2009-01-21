@@ -68,7 +68,7 @@
  *     var_dump($nextInvoicePdf);
  *     var_dump($vlanSpanResult);
  * } catch (Exception $e) {
- *     die('Unable to retrieve account information: '.$e->getMessage());
+ *     die('Unable to retrieve account information: ' . $e->getMessage());
  * }
  *
  * ----------
