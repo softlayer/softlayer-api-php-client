@@ -11,8 +11,6 @@ if (version_compare(PHP_VERSION, '5.2.3', '<')) {
     throw new Exception('The SoftLayer API SOAP client class requires at least PHP version 5.2.3.');
 }
 
-ini_set("soap.wsdl_cache_enabled", "0");
-
 /**
  * A SoftLayer API SOAP Client
  *
