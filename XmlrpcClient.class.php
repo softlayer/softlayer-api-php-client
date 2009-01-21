@@ -198,7 +198,7 @@ class Softlayer_XmlrpcClient
         // remove the resultLimit header if they set it
         $this->removeHeader('resultLimit');
 
-        return self::convertToObject(self::convertXmlrpcTypes($result));
+        return self::_convertToObject(self::_convertXmlrpcTypes($result));
     }
 
     /**
@@ -390,10 +390,10 @@ class Softlayer_XmlrpcClient
      * @param array $result The decoded xmlrpc request to process
      * @return array
      */
-    private static function convertXmlrpcTypes($result) {
+    private static function _convertXmlrpcTypes($result) {
         foreach ($result as $key => $value) {
             if (is_array($value)) {
-                $result[$key] = self::convertXmlrpcTypes($value);
+                $result[$key] = self::_convertXmlrpcTypes($value);
             } elseif (is_object($value) && $value->scalar != null && $value->xmlrpc_type != null) {
 
                 // Convert known xmlrpc types, otherwise unset the value.
@@ -420,7 +420,7 @@ class Softlayer_XmlrpcClient
      * @param mixed $result A result or portion of a result to convert
      * @return mixed
      */
-    private static function convertToObject($result) {
-        return is_array($result) ? (object) array_map('SoftLayer_XmlrpcClient::convertToObject', $result) : $result;
+    private static function _convertToObject($result) {
+        return is_array($result) ? (object) array_map('SoftLayer_XmlrpcClient::_convertToObject', $result) : $result;
     }
 }
