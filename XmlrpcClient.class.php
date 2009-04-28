@@ -140,7 +140,6 @@ if (version_compare(PHP_VERSION, '5', '<')) {
  * @copyright   Copyright (c) 2008, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/wiki/index.php/License
  * @link        http://sldn.softlayer.com/wiki/index.php/The_SoftLayer_API The SoftLayer API
- * @see         SoftLayer_XmlrpcClient_AsynchronousAction
  */
 class Softlayer_XmlrpcClient
 {
@@ -414,28 +413,47 @@ class Softlayer_XmlrpcClient
      * function removes xmlrpc_type data and moves the scalar value into the root of
      * the xmlrpc value for known xmlrpc types.
      *
-     * @param array $result The decoded xmlrpc request to process
-     * @return array
+     * @param mixed $result The decoded xmlrpc request to process
+     * @return mixed
      */
     private static function _convertXmlrpcTypes($result) {
-        foreach ($result as $key => $value) {
-            if (is_array($value)) {
-                $result[$key] = self::_convertXmlrpcTypes($value);
-            } elseif (is_object($value) && $value->scalar != null && $value->xmlrpc_type != null) {
+        if (is_array($result)) {
 
-                // Convert known xmlrpc types, otherwise unset the value.
-                switch ($value->xmlrpc_type) {
-                    case 'base64':
-                        $result[$key] = $value->scalar;
-                        break;
-                    default:
-                        unset ($result[$key]);
-                        break;
+            // Return case 1: The result is an empty array. Return the empty
+            // array.
+            if (count($result) == 0) {
+                return $result;
+            } else {
+
+                // Return case 2: The result is a non-empty array. Loop through
+                // array elements and recursively translate every element.
+                // Return the fully translated array.
+                foreach ($result as $key => $value) {
+                    $result[$key] = self::_convertXmlrpcTypes($value);
                 }
-            }
-        }
 
-        return $result;
+                return $result;
+            }
+
+        // Return case 3: The result is an xmlrpc scalar. Convert it to a normal
+        // variable and return it.
+        } elseif (is_object($result) && $result->scalar != null && $result->xmlrpc_type != null) {
+
+            // Convert known xmlrpc types, otherwise unset the value.
+            switch ($result->xmlrpc_type) {
+                case 'base64':
+                    return $result->scalar;
+                    break;
+                default:
+                    return null;
+                    break;
+            }
+
+        // Return case 4: Otherwise the result is a non-array and non xml-rpc
+        // scalar variable. Return it unmolested.
+        } else {
+            return $result;
+        }
     }
 
     /**
