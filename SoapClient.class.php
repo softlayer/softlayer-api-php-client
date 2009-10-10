@@ -225,6 +225,13 @@ class Softlayer_SoapClient extends SoapClient
     private $_asyncResult = null;
 
     /**
+     * Used when making asynchronous calls.
+     *
+     * @var bool
+     */
+    public $oneWay;
+
+    /**
      * Execute a SoftLayer API method
      *
      * @return object
