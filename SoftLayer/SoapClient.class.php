@@ -177,6 +177,14 @@ class Softlayer_SoapClient extends SoapClient
     const API_BASE_URL = 'http://api.service.softlayer.com/soap/v3/';
 
     /**
+     * An optional SOAP timeout if you want to set a timeout independent of
+     * PHP's socket timeout.
+     *
+     * @var int
+     */
+    const SOAP_TIMEOUT = null;
+
+    /**
      * The SOAP headers to send along with a SoftLayer API call
      *
      * @var array
@@ -290,7 +298,11 @@ class Softlayer_SoapClient extends SoapClient
             throw new Exception('Please provide a SoftLayer API service name.');
         }
 
-        $soapClient = new SoftLayer_SoapClient(self::API_BASE_URL . $serviceName . '?wsdl');
+        if (is_null(self::SOAP_TIMEOUT)) {
+            $soapClient = new SoftLayer_SoapClient(self::API_BASE_URL . $serviceName . '?wsdl');
+        } else {
+            $soapClient = new SoftLayer_SoapClient(self::API_BASE_URL . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
+        }
 
         if ($username != null && $apiKey != null) {
             $soapClient->setAuthentication($username, $apiKey);
