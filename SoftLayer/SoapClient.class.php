@@ -145,7 +145,7 @@ if (version_compare(PHP_VERSION, '5.2.3', '<')) {
  * this library.
  *
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
- * @copyright   Copyright (c) 2008, Softlayer Technologies, Inc
+ * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/wiki/index.php/License
  * @link        http://sldn.softlayer.com/wiki/index.php/The_SoftLayer_API The SoftLayer API
  * @see         SoftLayer_SoapClient_AsynchronousAction
