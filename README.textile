@@ -4,9 +4,9 @@ h2. Overview
 
 The SoftLayer API PHP client classes provide a simple method for connecting to and making calls from the SoftLayer API and provides support for many of the SoftLayer API's features. Method calls and client management are handled by the PHP SOAP and XML-RPC extensions.
 
-Currently the SoftLayer API only allows connections from within the SoftLayer private network. The system using this class must be either directly connected to the SoftLayer private network (eg. purchased from SoftLayer) or has access to the SoftLayer private network via a VPN connection.
+Currently the SoftLayer API only allows connections from within the SoftLayer private network. The system using this class must be either directly connected to the SoftLayer private network (eg. purchased from SoftLayer) or have access to the SoftLayer private network via a VPN connection.
 
-Making API calls using the SoftLayer_SoapClient or SoftLayer_XmlrpcClient class is done in the following steps:
+Making API calls using the SoftLayer_SoapClient or SoftLayer_XmlrpcClient classes is done in the following steps:
 
 # Instantiate a new SoftLayer_SoapClient or SoftLayer_XmlrpcClient object using the SoftLayer_SoapClient::getClient() or SoftLayer_XmlrpcClient::getClient() methods. Provide the name of the service that you wish to query, an optional id number of the object that you wish to instantiate, your SoftLayer API username, and your SoftLayer API key.
 # Define and add optional headers to the client, such as object masks and result limits.
@@ -30,7 +30,7 @@ h2. Usage
 
 These examples use the SoftLayer_SoapClient class. If you wish to use the XML-RPC API then replace mentions of SoapClient.class.php with XmlrpcClient.class.php and SoftLayer_SoapClient with SoftLayer_XmlrpcClient.
 
-Here's a simple usage example that retrieves account information by calling the "getObject()":http://sldn.softlayer.com/wiki/index.php/SoftLayer_Account::getObject  method in the "SoftLayer_Account":http://sldn.softlayer.com/wiki/index.php/SoftLayer_Account service:
+Here's a simple usage example that retrieves account information by calling the "getObject()":http://sldn.softlayer.com/wiki/index.php/SoftLayer_Account::getObject method in the "SoftLayer_Account":http://sldn.softlayer.com/wiki/index.php/SoftLayer_Account service:
 
 <pre><code>
 <?php
