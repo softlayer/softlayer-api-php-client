@@ -107,7 +107,7 @@ $update->entry = 'Hello!';
 
 try {
     $update = $client->addUpdate($update);
-    echo "Updated ticket 123456. The new update's id is " . $update->id . '.';
+    echo "Updated ticket 123456. The new update's id is " . $update[0]->id . '.';
 } catch (Exception $e) {
     die('Unable to update ticket: ' . $e->getMessage());
 }
