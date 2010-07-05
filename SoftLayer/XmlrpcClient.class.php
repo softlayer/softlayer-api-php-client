@@ -234,6 +234,7 @@ class Softlayer_XmlrpcClient
      * @see removeHeader()
      * @param string $name The name of the header you wish to set
      * @param object $value The object you wish to set in this header
+     * @return SoftLayer_XmlrpcClient
      */
     public function addHeader($name, $value)
     {
@@ -242,6 +243,7 @@ class Softlayer_XmlrpcClient
         }
 
         $this->_headers[$name] = $value;
+        return $this;
     }
 
     /**
@@ -251,10 +253,12 @@ class Softlayer_XmlrpcClient
      *
      * @see addHeader()
      * @param string $name The name of the header you wish to remove
+     * @return SoftLayer_XmlrpcClient
      */
     public function removeHeader($name)
     {
         unset($this->_headers[$name]);
+        return $this;
     }
 
     /**
@@ -266,6 +270,7 @@ class Softlayer_XmlrpcClient
      * @link https://manage.softlayer.com/Administrative/apiKeychain API key management in the SoftLayer customer portal
      * @param string $username
      * @param string $apiKey
+     * @return SoftLayer_XmlrpcClient
      */
     public function setAuthentication($username, $apiKey)
     {
@@ -285,8 +290,8 @@ class Softlayer_XmlrpcClient
         $header->apiKey   = $apiKey;
 
         $this->addHeader('authenticate', $header);
+        return $this;
     }
-
 
     /**
      * Set an initialization parameter header on a SoftLayer API call
@@ -299,6 +304,7 @@ class Softlayer_XmlrpcClient
      *
      * @link http://sldn.softlayer.com/wiki/index.php/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
      * @param int $id The ID number of the SoftLayer API object you wish to instantiate.
+     * @return SoftLayer_XmlrpcClient
      */
     public function setInitParameter($id)
     {
@@ -309,6 +315,8 @@ class Softlayer_XmlrpcClient
             $initParameters->id = $id;
             $this->addHeader($this->_serviceName . 'InitParameters', $initParameters);
         }
+
+        return $this;
     }
 
     /**
@@ -322,6 +330,7 @@ class Softlayer_XmlrpcClient
      * @link http://sldn.softlayer.com/wiki/index.php/Using_Object_Masks_in_the_SoftLayer_API Using object masks in the SoftLayer API
      * @link http://sldn.softlayer.com/wiki/index.php/Category:API_methods_that_can_use_object_masks API methods that can use object masks
      * @param object $mask The object mask you wish to define
+     * @return SoftLayer_XmlrpcClient
      */
     public function setObjectMask($mask)
     {
@@ -335,6 +344,8 @@ class Softlayer_XmlrpcClient
 
             $this->addHeader($this->_serviceName . 'ObjectMask', $objectMask);
         }
+
+        return $this;
     }
 
     /**
@@ -348,6 +359,7 @@ class Softlayer_XmlrpcClient
      * @link http://sldn.softlayer.com/wiki/index.php/Category:API_methods_that_can_use_result_limits API methods that can use result limits
      * @param int $limit The number of results to limit your SoftLayer API call to.
      * @param int $offset An optional offset to begin your SoftLayer API call's returned result set at.
+     * @return SoftLayer_XmlrpcClient
      */
     public function setResultLimit($limit, $offset = 0)
     {
@@ -356,6 +368,7 @@ class Softlayer_XmlrpcClient
         $resultLimit->offset = intval($offset);
 
         $this->addHeader('resultLimit', $resultLimit);
+        return $this;
     }
 
     /**
