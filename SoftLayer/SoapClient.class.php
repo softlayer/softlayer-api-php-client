@@ -81,11 +81,27 @@ class Softlayer_SoapClient extends SoapClient
     const API_KEY = 'set me';
 
     /**
-     * The base URL of the SoftLayer SOAP API's WSDL files.
+     * The base URL of the SoftLayer SOAP API's WSDL files over the public
+     * Internet.
      *
      * @var string
      */
-    const API_BASE_URL = 'http://api.service.softlayer.com/soap/v3/';
+    const API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/soap/v3/';
+
+    /**
+     * The base URL of the SoftLayer SOAP API's WSDL files over SoftLayer's
+     * private network.
+     *
+     * @var string
+     */
+    const API_PRIVATE_ENDPOINT = 'http://api.service.softlayer.com/soap/v3/';
+
+    /**
+     * The API endpoint base URL used by the client.
+     *
+     * @var string
+     */
+    const API_BASE_URL = SoftLayer_SoapClient::API_PUBLIC_ENDPOINT;
 
     /**
      * An optional SOAP timeout if you want to set a timeout independent of
@@ -111,6 +127,14 @@ class Softlayer_SoapClient extends SoapClient
     protected $_serviceName;
 
     /**
+     * The base URL to the SoftLayer API's WSDL files being used by this
+     * client.
+     *
+     * @var string
+     */
+    protected $_endpointUrl;
+
+    /**
      * Whether or not the current call is an asynchronous call.
      *
      * @var bool
@@ -132,7 +156,6 @@ class Softlayer_SoapClient extends SoapClient
      * @var string
      */
     public $asyncFunctionName = null;
-
 
     /**
      * If making an asynchronous call, then this is the result of an
@@ -199,9 +222,10 @@ class Softlayer_SoapClient extends SoapClient
      * @param int $id An optional object id if you're instantiating a particular SoftLayer API object. Setting an id defines this client's initialization parameter header.
      * @param string $username An optional API username if you wish to bypass SoftLayer_SoapClient's built-in username.
      * @param string $username An optional API key if you wish to bypass SoftLayer_SoapClient's built-in API key.
+     * @param string $endpointUrl The API endpoint base URL you wish to connect to. Set this to SoftLayer_SoapClient::API_PRIVATE_ENDPOINT to connect via SoftLayer's private network.
      * @return SoftLayer_SoapClient
      */
-    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null)
+    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null)
     {
         $serviceName = trim($serviceName);
 
@@ -209,19 +233,37 @@ class Softlayer_SoapClient extends SoapClient
             throw new Exception('Please provide a SoftLayer API service name.');
         }
 
-        if (is_null(self::SOAP_TIMEOUT)) {
-            $soapClient = new SoftLayer_SoapClient(self::API_BASE_URL . $serviceName . '?wsdl');
+        /*
+         * Default to use the public network API endpoint, otherwise use the
+         * endpoint defined in API_PUBLIC_ENDPOINT, otherwise use the one
+         * provided by the user.
+         */
+        if (isset($endpointUrl)) {
+            $endpointUrl = trim($endpointUrl);
+
+            if ($endpointUrl == null) {
+                throw new Exception('Please provide a valid API endpoint.');
+            }
+        } elseif (self::API_BASE_URL != null) {
+            $endpointUrl = self::API_BASE_URL;
         } else {
-            $soapClient = new SoftLayer_SoapClient(self::API_BASE_URL . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
+            $endpointUrl = SoftLayer_SoapClient::API_PUBLIC_ENDPOINT;
         }
+
+        if (is_null(self::SOAP_TIMEOUT)) {
+            $soapClient = new SoftLayer_SoapClient($endpointUrl . $serviceName . '?wsdl');
+        } else {
+            $soapClient = new SoftLayer_SoapClient($endpointUrl . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
+        }
+
+        $soapClient->_serviceName = $serviceName;
+        $soapClient->_endpointUrl = $endpointUrl;
 
         if ($username != null && $apiKey != null) {
             $soapClient->setAuthentication($username, $apiKey);
         } else {
             $soapClient->setAuthentication(self::API_USER, self::API_KEY);
         }
-
-        $soapClient->_serviceName = $serviceName;
 
         if ($id != null) {
             $soapClient->setInitParameter($id);
@@ -244,7 +286,7 @@ class Softlayer_SoapClient extends SoapClient
      */
     public function addHeader($name, $value)
     {
-        $this->_headers[$name] = new SoapHeader(self::API_BASE_URL, $name, $value);
+        $this->_headers[$name] = new SoapHeader($this->_endpointUrl, $name, $value);
     }
 
     /**

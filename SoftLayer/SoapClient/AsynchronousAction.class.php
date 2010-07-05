@@ -169,8 +169,15 @@ class SoftLayer_SoapClient_AsynchronousAction
             'Connection: close',
         );
 
+        if ($protocol == 'https') {
+            $host = 'ssl://' . $host;
+            $port = 443;
+        } else {
+            $port = 80;
+        }
+
         $data = implode("\r\n", $headers) . "\r\n\r\n" . $request . "\r\n";
-        $this->_socket = fsockopen($host, 80, $errorNumber, $errorMessage);
+        $this->_socket = fsockopen($host, $port, $errorNumber, $errorMessage);
 
         if ($this->_socket === false) {
             $this->_socket = null;

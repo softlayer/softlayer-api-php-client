@@ -74,11 +74,25 @@ class Softlayer_XmlrpcClient
     const API_KEY = 'set me';
 
     /**
-     * The base URL of SoftLayer XML-RPC API's endpoints.
+     * The base URL of SoftLayer XML-RPC API's public network endpoints.
      *
      * @var string
      */
-    const API_BASE_URL = 'http://api.service.softlayer.com/xmlrpc/v3/';
+    const API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/xmlrpc/v3/';
+
+    /**
+     * The base URL of SoftLayer XML-RPC API's private network endpoints.
+     *
+     * @var string
+     */
+    const API_PRIVATE_ENDPOINT = 'http://api.service.softlayer.com/xmlrpc/v3/';
+
+    /**
+     * The API endpoint base URL used by the client.
+     *
+     * @var string
+     */
+    const API_BASE_URL = SoftLayer_XmlrpcClient::API_PUBLIC_ENDPOINT;
 
     /**
      * The headers to send along with a SoftLayer API call
@@ -94,6 +108,13 @@ class Softlayer_XmlrpcClient
      * @var string
      */
     protected $_serviceName;
+
+    /**
+     * The base URL of SoftLayer XML-RPC API's endpoints used by this client.
+     *
+     * @var string
+     */
+    protected $_endpointUrl;
 
     /**
      * Execute a SoftLayer API method
@@ -119,10 +140,10 @@ class Softlayer_XmlrpcClient
                     'content' => $encodedRequest
                 )));
 
-            $file = file_get_contents(self::API_BASE_URL . $this->_serviceName, false, $context);
+            $file = file_get_contents($this->_endpointUrl . $this->_serviceName, false, $context);
 
             if ($file === false) {
-                throw new Exception('Unable to contact the SoftLayer API at ' . self::API_BASE_URL . $serviceName . '.');
+                throw new Exception('Unable to contact the SoftLayer API at ' . $this->_endpointUrl . $serviceName . '.');
             }
 
             $result = xmlrpc_decode($file);
@@ -152,9 +173,10 @@ class Softlayer_XmlrpcClient
      * @param int $id An optional object id if you're instantiating a particular SoftLayer API object. Setting an id defines this client's initialization parameter header.
      * @param string $username An optional API username if you wish to bypass SoftLayer_XmlrpcClient's built-in username.
      * @param string $username An optional API key if you wish to bypass SoftLayer_XmlrpcClient's built-in API key.
+     * @param string $endpointUrl The API endpoint base URL you wish to connect to. Set this to SoftLayer_XmlrpcClient::API_PRIVATE_ENDPOINT to connect via SoftLayer's private network.
      * @return SoftLayer_XmlrpcClient
      */
-    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null)
+    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null)
     {
         $serviceName = trim($serviceName);
         $id = trim($id);
@@ -166,6 +188,25 @@ class Softlayer_XmlrpcClient
         }
 
         $client = new Softlayer_XmlrpcClient();
+
+        /*
+         * Default to use the public network API endpoint, otherwise use the
+         * endpoint defined in API_PUBLIC_ENDPOINT, otherwise use the one
+         * provided by the user.
+         */
+        if (isset($endpointUrl)) {
+            $endpointUrl = trim($endpointUrl);
+
+            if ($endpointUrl == null) {
+                throw new Exception('Please provide a valid API endpoint.');
+            }
+
+            $client->_endpointUrl = $endpointUrl;
+        } elseif (self::API_BASE_URL != null) {
+            $client->_endpointUrl = self::API_BASE_URL;
+        } else {
+            $client->_endpointUrl = SoftLayer_XmlrpcClient::API_PUBLIC_ENDPOINT;
+        }
 
         if ($username != null && $apiKey != null) {
             $client->setAuthentication($username, $apiKey);
