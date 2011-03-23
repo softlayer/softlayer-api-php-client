@@ -150,7 +150,7 @@ class SoftLayer_SoapClient_AsynchronousAction
      */
     public function __construct($soapClient, $functionName, $request, $location, $action)
     {
-        preg_match('%^(http(?:s)?://)(.*?)(/.*?)$%', $location, $matches);
+        preg_match('%^(http(?:s)?)://(.*?)(/.*?)$%', $location, $matches);
 
         $this->_soapClient = $soapClient;
         $this->_functionName = $functionName;
