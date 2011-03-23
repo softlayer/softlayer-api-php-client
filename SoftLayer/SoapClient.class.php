@@ -265,7 +265,7 @@ class Softlayer_SoapClient extends SoapClient
             $soapClient->setAuthentication(self::API_USER, self::API_KEY);
         }
 
-        if ($id != null) {
+        if ($id !== null) {
             $soapClient->setInitParameter($id);
         }
 
