@@ -151,7 +151,7 @@ class Softlayer_XmlrpcClient
             throw new Exception('There was an error querying the SoftLayer API: ' . $e->getMessage());
         }
 
-        if (xmlrpc_is_fault($result)) {
+        if (is_array($result) && xmlrpc_is_fault($result)) {
             throw new Exception('There was an error querying the SoftLayer API: ' . $result['faultString']);
         }
 
