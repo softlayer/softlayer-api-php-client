@@ -323,26 +323,26 @@ class Softlayer_XmlrpcClient
      * Set an object mask to a SoftLayer API call
      *
      * Use an object mask to retrieve data related your API call's result.
-     * Object masks are skeleton objects that define nested relational
+     * Object masks are skeleton objects or strings that define nested relational
      * properties to retrieve along with an object's local properties.
      *
      * @see SoftLayer_ObjectMask
-     * @link http://sldn.softlayer.com/wiki/index.php/Using_Object_Masks_in_the_SoftLayer_API Using object masks in the SoftLayer API
-     * @link http://sldn.softlayer.com/wiki/index.php/Category:API_methods_that_can_use_object_masks API methods that can use object masks
+     * @link http://sldn.softlayer.com/article/Using-Object-Masks-SoftLayer-API Using object masks in the SoftLayer API
      * @param object $mask The object mask you wish to define
-     * @return SoftLayer_XmlrpcClient
+     * @return SoftLayer_SoapClient
      */
     public function setObjectMask($mask)
     {
         if (!is_null($mask)) {
-            if (!($mask instanceof SoftLayer_ObjectMask)) {
-                throw new Exception('Please provide a SoftLayer_ObjectMask to define an object mask.');
+             $header = 'SoftLayer_ObjectMask';
+
+            if ($mask instanceof SoftLayer_ObjectMask) {
+                $header = sprintf('%sObjectMask', $this->_serviceName);
             }
 
             $objectMask = new stdClass();
             $objectMask->mask = $mask;
-
-            $this->addHeader($this->_serviceName . 'ObjectMask', $objectMask);
+            $this->addHeader($header, $objectMask);
         }
 
         return $this;
