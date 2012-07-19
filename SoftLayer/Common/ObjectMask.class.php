@@ -54,7 +54,7 @@
  * making your SoftLayer API calls.
  *
  * For more on object mask usage in the SoftLayer API please see
- * http://sldn.softlayer.com/wiki/index.php/Using_Object_Masks_in_the_SoftLayer_API .
+ * http://sldn.softlayer.com/article/Using_Object_Masks_in_the_SoftLayer_API .
  *
  * The most up to date version of this library can be found on the SoftLayer
  * github public repositories: http://github.com/softlayer/ . Please post to
@@ -64,7 +64,7 @@
  *
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
  * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
- * @license     http://sldn.softlayer.com/wiki/index.php/License
+ * @license     http://sldn.softlayer.com/article/License
  * @see         SoftLayer_SoapClient::setObjectMask()
  * @see         SoftLayer_XmlrpcClient::setObjectMask()
  */

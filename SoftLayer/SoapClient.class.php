@@ -57,8 +57,8 @@ if (version_compare(PHP_VERSION, '5.2.3', '<')) {
  *
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
  * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
- * @license     http://sldn.softlayer.com/wiki/index.php/License
- * @link        http://sldn.softlayer.com/wiki/index.php/The_SoftLayer_API The SoftLayer API
+ * @license     http://sldn.softlayer.com/article/License
+ * @link        http://sldn.softlayer.com/article/The_SoftLayer_API The SoftLayer API
  * @see         SoftLayer_SoapClient_AsynchronousAction
  */
 class Softlayer_SoapClient extends SoapClient
@@ -129,7 +129,7 @@ class Softlayer_SoapClient extends SoapClient
     /**
      * The name of the SoftLayer API service you wish to query.
      *
-     * @link http://sldn.softlayer.com/wiki/index.php/Category:API_Services A list of SoftLayer API services
+     * @link http://sldn.softlayer.com/reference/services A list of SoftLayer API services
      * @var string
      */
     protected $_serviceName;
@@ -356,7 +356,7 @@ class Softlayer_SoapClient extends SoapClient
      * 1234 in the SoftLayer_Hardware_Server Service instructs the API to act on
      * server record 1234 in your method calls.
      *
-     * @link http://sldn.softlayer.com/wiki/index.php/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
+     * @link http://sldn.softlayer.com/article/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
      * @param int $id The ID number of the SoftLayer API object you wish to instantiate.
      * @return SoftLayer_SoapClient
      */
@@ -409,8 +409,7 @@ class Softlayer_SoapClient extends SoapClient
      * support a way to limit the number of results retrieved from the SoftLayer
      * API in a way akin to an SQL LIMIT statement.
      *
-     * @link http://sldn.softlayer.com/wiki/index.php/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
-     * @link http://sldn.softlayer.com/wiki/index.php/Category:API_methods_that_can_use_result_limits API methods that can use result limits
+     * @link http://sldn.softlayer.com/article/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
      * @param int $limit The number of results to limit your SoftLayer API call to.
      * @param int $offset An optional offset to begin your SoftLayer API call's returned result set at.
      * @return SoftLayer_SoapClient

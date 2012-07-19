@@ -28,7 +28,7 @@ h2. Usage
 
 These examples use the SoftLayer_SoapClient class. If you wish to use the XML-RPC API then replace mentions of SoapClient.class.php with XmlrpcClient.class.php and SoftLayer_SoapClient with SoftLayer_XmlrpcClient.
 
-Here's a simple usage example that retrieves account information by calling the "getObject()":http://sldn.softlayer.com/wiki/index.php/SoftLayer_Account::getObject method in the "SoftLayer_Account":http://sldn.softlayer.com/wiki/index.php/SoftLayer_Account service:
+Here's a simple usage example that retrieves account information by calling the "getObject()":http://sldn.softlayer.com/reference/services/SoftLayer_Account/getObject method in the "SoftLayer_Account":http://sldn.softlayer.com/reference/services/SoftLayer_Account service:
 
 <pre><code>
 <?php
