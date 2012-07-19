@@ -65,7 +65,7 @@ $client = SoftLayer_SoapClient::getClient('SoftLayer_Account', null, $apiUsernam
  * so it's best to try your call and catch exceptions.
  *
  * This example calls the getObject() method in the SoftLayer_Account API
- * service. <http://sldn.softlayer.com/wiki/index.php/SoftLayer_Account::getObject>
+ * service. <http://sldn.softlayer.com/reference/services/SoftLayer_Account/getObject>
  * It retrieves basic account information, and is a great way to test your API
  * account and connectivity.
  */
