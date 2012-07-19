@@ -108,7 +108,7 @@
  *
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
  * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
- * @license     http://sldn.softlayer.com/wiki/index.php/License
+ * @license     http://sldn.softlayer.com/article/License
  * @see         SoftLayer_SoapClient
  */
 class SoftLayer_SoapClient_AsynchronousAction

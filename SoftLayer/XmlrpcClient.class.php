@@ -51,8 +51,8 @@ if (version_compare(PHP_VERSION, '5', '<')) {
  *
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
  * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
- * @license     http://sldn.softlayer.com/wiki/index.php/License
- * @link        http://sldn.softlayer.com/wiki/index.php/The_SoftLayer_API The SoftLayer API
+ * @license     http://sldn.softlayer.com/article/License
+ * @link        http://sldn.softlayer.com/article/The_SoftLayer_API The SoftLayer API
  */
 class Softlayer_XmlrpcClient
 {
@@ -104,7 +104,7 @@ class Softlayer_XmlrpcClient
     /**
      * The name of the SoftLayer API service you wish to query.
      *
-     * @link http://sldn.softlayer.com/wiki/index.php/Category:API_Services A list of SoftLayer API services
+     * @link http://sldn.softlayer.com/reference/services A list of SoftLayer API services
      * @var string
      */
     protected $_serviceName;
@@ -302,7 +302,7 @@ class Softlayer_XmlrpcClient
      * 1234 in the SoftLayer_Hardware_Server Service instructs the API to act on
      * server record 1234 in your method calls.
      *
-     * @link http://sldn.softlayer.com/wiki/index.php/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
+     * @link http://sldn.softlayer.com/article/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
      * @param int $id The ID number of the SoftLayer API object you wish to instantiate.
      * @return SoftLayer_XmlrpcClient
      */
@@ -323,26 +323,26 @@ class Softlayer_XmlrpcClient
      * Set an object mask to a SoftLayer API call
      *
      * Use an object mask to retrieve data related your API call's result.
-     * Object masks are skeleton objects that define nested relational
+     * Object masks are skeleton objects or strings that define nested relational
      * properties to retrieve along with an object's local properties.
      *
      * @see SoftLayer_ObjectMask
-     * @link http://sldn.softlayer.com/wiki/index.php/Using_Object_Masks_in_the_SoftLayer_API Using object masks in the SoftLayer API
-     * @link http://sldn.softlayer.com/wiki/index.php/Category:API_methods_that_can_use_object_masks API methods that can use object masks
+     * @link http://sldn.softlayer.com/article/Using-Object-Masks-SoftLayer-API Using object masks in the SoftLayer API
      * @param object $mask The object mask you wish to define
-     * @return SoftLayer_XmlrpcClient
+     * @return SoftLayer_SoapClient
      */
     public function setObjectMask($mask)
     {
         if (!is_null($mask)) {
-            if (!($mask instanceof SoftLayer_ObjectMask)) {
-                throw new Exception('Please provide a SoftLayer_ObjectMask to define an object mask.');
+             $header = 'SoftLayer_ObjectMask';
+
+            if ($mask instanceof SoftLayer_ObjectMask) {
+                $header = sprintf('%sObjectMask', $this->_serviceName);
             }
 
             $objectMask = new stdClass();
             $objectMask->mask = $mask;
-
-            $this->addHeader($this->_serviceName . 'ObjectMask', $objectMask);
+            $this->addHeader($header, $objectMask);
         }
 
         return $this;
@@ -355,8 +355,7 @@ class Softlayer_XmlrpcClient
      * support a way to limit the number of results retrieved from the SoftLayer
      * API in a way akin to an SQL LIMIT statement.
      *
-     * @link http://sldn.softlayer.com/wiki/index.php/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
-     * @link http://sldn.softlayer.com/wiki/index.php/Category:API_methods_that_can_use_result_limits API methods that can use result limits
+     * @link http://sldn.softlayer.com/article/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
      * @param int $limit The number of results to limit your SoftLayer API call to.
      * @param int $offset An optional offset to begin your SoftLayer API call's returned result set at.
      * @return SoftLayer_XmlrpcClient
