@@ -406,12 +406,9 @@ class Softlayer_SoapClient extends SoapClient
     public function setObjectFilter($objectFilter)
     {
         if (!is_null($objectFilter)) {
- 
             $header = sprintf('%sObjectFilter', $this->_serviceName);
- 
             $this->addHeader($header, $objectFilter);
         }
- 
         return $this;
     }
     /**
