@@ -402,7 +402,16 @@ class Softlayer_SoapClient extends SoapClient
         return $this;
     }
 
-
+    /**
+     * Set an object filter to a SoftLayer API call
+     *
+     * Use an object filter to limit what data you get back
+     * from the API. Very similar to objectMasks
+     *
+     * @see SoftLayer_ObjectMask
+     * @param object $filter The object filter you wish to define
+     * @return SoftLayer_SoapClient
+     */
     public function setObjectFilter($objectFilter)
     {
         if (!is_null($objectFilter)) {
