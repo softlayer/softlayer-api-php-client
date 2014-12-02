@@ -10,7 +10,7 @@ Making API calls using the SoftLayer_SoapClient or SoftLayer_XmlrpcClient classe
 # Define and add optional headers to the client, such as object masks and result limits.
 # Call the API method you wish to call as if it were local to your client object. This class throws exceptions if it's unable to execute a query, so it's best to place API method calls in try / catch statements for proper error handling.
 
-Once your method is executed you may continue using the same client if you need to conenct to the same service or define another client object if you wish to work with multiple services at once.
+Once your method is executed you may continue using the same client if you need to connect to the same service or define another client object if you wish to work with multiple services at once.
 
 The most up to date version of this library can be found on the SoftLayer github public repositories: "http://github.com/softlayer/":http://github.com/softlayer/ . Please post to the SoftLayer forums <"http://forums.softlayer.com/":http://forums.softlayer.com/> or open a support ticket in the SoftLayer customer portal if you have any questions regarding use of this library.
 
