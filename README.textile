@@ -4,9 +4,9 @@ h2. Overview
 
 The SoftLayer API PHP client classes provide a simple method for connecting to and making calls from the SoftLayer API and provides support for many of the SoftLayer API's features. Method calls and client management are handled by the PHP SOAP and XML-RPC extensions.
 
-Making API calls using the SoftLayer_SoapClient or SoftLayer_XmlrpcClient classes is done in the following steps:
+Making API calls using the \SoftLayer\SoapClient or \SoftLayer\XmlRpcClient classes is done in the following steps:
 
-# Instantiate a new SoftLayer_SoapClient or SoftLayer_XmlrpcClient object using the SoftLayer_SoapClient::getClient() or SoftLayer_XmlrpcClient::getClient() methods. Provide the name of the service that you wish to query, an optional id number of the object that you wish to instantiate, your SoftLayer API username, your SoftLayer API key, and an optional API endpoint base URL. The client classes default to connect over the public Internet. Enter SoftLayer_SoapClient::API_PRIVATE_ENDPOINT or SoftLayer_XmlrpcClient::API_PRIVATE_ENDPOINT to connect to the API over SoftLayer's private network. The system making API calls must be connected to SoftLayer's private network (eg. purchased from SoftLayer or connected via VPN) in order to use the private network API endpoints.
+# Instantiate a new \SoftLayer\SoapClient or \SoftLayer\XmlRpcClient object using the \SoftLayer\SoapClient::getClient() or \SoftLayer\XmlRpcClient::getClient() methods. Provide the name of the service that you wish to query, an optional id number of the object that you wish to instantiate, your SoftLayer API username, your SoftLayer API key, and an optional API endpoint base URL. The client classes default to connect over the public Internet. Enter \SoftLayer\SoapClient::API_PRIVATE_ENDPOINT or \SoftLayer\XmlRpcClient::API_PRIVATE_ENDPOINT to connect to the API over SoftLayer's private network. The system making API calls must be connected to SoftLayer's private network (eg. purchased from SoftLayer or connected via VPN) in order to use the private network API endpoints.
 # Define and add optional headers to the client, such as object masks and result limits.
 # Call the API method you wish to call as if it were local to your client object. This class throws exceptions if it's unable to execute a query, so it's best to place API method calls in try / catch statements for proper error handling.
 
@@ -16,36 +16,39 @@ The most up to date version of this library can be found on the SoftLayer github
 
 h2. System Requirements
 
-The SoftLayer_SoapClient class requires at least PHP 5.2.3 and the PHP SOAP enxtension installed. The SoftLayer_Xmlrpc class requires PHP at least PHP 5 and the PHP XML-RPC extension installed.
+The \SoftLayer\SoapClient class requires at least PHP 5.3.0 and the PHP SOAP enxtension installed. The \SoftLayer\XmlRpcClient class requires PHP at least PHP 5 and the PHP XML-RPC extension installed.
 
 A valid API username and key are required to call the SoftLayer API. A connection to the SoftLayer private network is required to connect to SoftLayer's private network API endpopints.
 
 h2. Installation
 
-Download and copy the SoftLayer API client to a directory local to your PHP project or a path within your PHP installation's include_path.
+Install the SoftLayer API client using "Composer":https://getcomposer.org/.
+<pre><code>
+composer require softlayer/softlayer-api-php-client:~1.0@dev
+</code></pre>
 
 h2. Usage
 
-These examples use the SoftLayer_SoapClient class. If you wish to use the XML-RPC API then replace mentions of SoapClient.class.php with XmlrpcClient.class.php and SoftLayer_SoapClient with SoftLayer_XmlrpcClient.
+These examples use the \SoftLayer\SoapClient class. If you wish to use the XML-RPC API then replace mentions of SoapClient.class.php with XmlrpcClient.class.php and \SoftLayer\SoapClient with \SoftLayer\XmlRpcClient.
 
 Here's a simple usage example that retrieves account information by calling the "getObject()":http://sldn.softlayer.com/reference/services/SoftLayer_Account/getObject method in the "SoftLayer_Account":http://sldn.softlayer.com/reference/services/SoftLayer_Account service:
 
 <pre><code>
 <?php
 
-require_once dirname(__FILE__) . '/SoftLayer/SoapClient.class.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 $apiUsername = 'set me';
 $apiKey = 'set me too';
 
 // Initialize an API client for the SoftLayer_Account service.
-$client = SoftLayer_SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey);
+$client = \SoftLayer\SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey);
 
 // Retrieve our account record
 try {
     $account = $client->getObject();
     print_r($account);
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die('Unable to retrieve account information: ' . $e->getMessage());
 }
 </code></pre>
@@ -55,16 +58,16 @@ For a more complex example we'll retrieve a support ticket with id 123456 along 
 <pre><code>
 <?php
 
-require_once dirname(__FILE__) . '/SoftLayer/SoapClient.class.php';
+require_once __DIR__.'/vendor/autoload.php';
 
 $apiUsername = 'set me';
 $apiKey = 'set me too';
 
 // Initialize an API client for ticket 123456
-$client = SoftLayer_SoapClient::getClient('SoftLayer_Ticket', 123456, $apiUsername, $apiKey);
+$client = \SoftLayer\SoapClient::getClient('SoftLayer_Ticket', 123456, $apiUsername, $apiKey);
 
 // Create an object mask and assign it to our API client.
-$objectMask = new SoftLayer_ObjectMask();
+$objectMask = new \SoftLayer\ObjectMask();
 $objectMask->updates;
 $objectMask->assignedUser;
 $objectMask->attachedHardware->datacenter;
@@ -73,18 +76,18 @@ $client->setObjectMask($objectMask);
 // Retrieve the ticket record
 try {
     $ticket = $client->getObject();
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die('Unable to retrieve ticket record: ' . $e->getMessage());
 }
 
 // Update the ticket
-$update = new stdClass();
+$update = new \stdClass();
 $update->entry = 'Hello!';
 
 try {
     $update = $client->addUpdate($update);
     echo "Updated ticket 123456. The new update's id is " . $update[0]->id . '.');
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die('Unable to update ticket: ' . $e->getMessage());
 }
 </code></pre>

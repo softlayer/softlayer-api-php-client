@@ -27,16 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once dirname(__FILE__) . '/Common/ObjectMask.class.php';
-require_once dirname(__FILE__) . '/SoapClient/AsynchronousAction.class.php';
+namespace SoftLayer;
 
-if (!extension_loaded('soap')) {
-    throw new Exception('Please load the PHP SOAP extension.');
-}
-
-if (version_compare(PHP_VERSION, '5.2.3', '<')) {
-    throw new Exception('The SoftLayer API SOAP client class requires at least PHP version 5.2.3.');
-}
+use SoftLayer\Common\ObjectMask;
+use SoftLayer\SoapClient\AsynchronousAction;
 
 /**
  * A SoftLayer API SOAP Client
@@ -46,7 +40,7 @@ if (version_compare(PHP_VERSION, '5.2.3', '<')) {
  *
  * This client supports sending multiple calls in parallel to the SoftLayer
  * API. Please see the documentation in the
- * SoftLayer_SoapClient_AsynchronousAction class in
+ * AsynchronousAction class in
  * SoapClient/AsynchronousAction.php for details.
  *
  * The most up to date version of this library can be found on the SoftLayer
@@ -59,9 +53,9 @@ if (version_compare(PHP_VERSION, '5.2.3', '<')) {
  * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/article/License
  * @link        http://sldn.softlayer.com/article/The_SoftLayer_API The SoftLayer API
- * @see         SoftLayer_SoapClient_AsynchronousAction
+ * @see         AsynchronousAction
  */
-class Softlayer_SoapClient extends SoapClient
+class SoapClient extends \SoapClient
 {
     /**
      * Your SoftLayer API username. You may overide this value when calling
@@ -109,7 +103,7 @@ class Softlayer_SoapClient extends SoapClient
      *
      * @var string
      */
-    const API_BASE_URL = SoftLayer_SoapClient::API_PUBLIC_ENDPOINT;
+    const API_BASE_URL = SoapClient::API_PUBLIC_ENDPOINT;
 
     /**
      * An optional SOAP timeout if you want to set a timeout independent of
@@ -153,7 +147,7 @@ class Softlayer_SoapClient extends SoapClient
      * The object that handles asynchronous calls if the current call is an
      * asynchronous call.
      *
-     * @var SoftLayer_SoapClient_AsynchronousAction
+     * @var AsynchronousAction
      */
     private $_asyncAction = null;
 
@@ -168,7 +162,7 @@ class Softlayer_SoapClient extends SoapClient
     /**
      * If making an asynchronous call, then this is the result of an
      * asynchronous call as retuned from the
-     * SoftLayer_SoapClient_AsynchronousAction class.
+     * AsynchronousAction class.
      *
      * @var object
      */
@@ -205,7 +199,7 @@ class Softlayer_SoapClient extends SoapClient
         try {
             $result = parent::__call($functionName, $arguments, null, $this->_headers, null);
         } catch (SoapFault $e) {
-            throw new Exception('There was an error querying the SoftLayer API: ' . $e->getMessage());
+            throw new \Exception('There was an error querying the SoftLayer API: ' . $e->getMessage());
         }
 
         if ($this->_asynchronous == true) {
@@ -221,24 +215,24 @@ class Softlayer_SoapClient extends SoapClient
     /**
      * Create a SoftLayer API SOAP Client
      *
-     * Retrieve a new SoftLayer_SoapClient object for a specific SoftLayer API
+     * Retrieve a new SoapClient object for a specific SoftLayer API
      * service using either the class' constants API_USER and API_KEY or a
      * custom username and API key for authentication. Provide an optional id
      * value if you wish to instantiate a particular SoftLayer API object.
      *
      * @param string $serviceName The name of the SoftLayer API service you wish to query
      * @param int $id An optional object id if you're instantiating a particular SoftLayer API object. Setting an id defines this client's initialization parameter header.
-     * @param string $username An optional API username if you wish to bypass SoftLayer_SoapClient's built-in username.
-     * @param string $username An optional API key if you wish to bypass SoftLayer_SoapClient's built-in API key.
-     * @param string $endpointUrl The API endpoint base URL you wish to connect to. Set this to SoftLayer_SoapClient::API_PRIVATE_ENDPOINT to connect via SoftLayer's private network.
-     * @return SoftLayer_SoapClient
+     * @param string $username An optional API username if you wish to bypass SoapClient's built-in username.
+     * @param string $username An optional API key if you wish to bypass SoapClient's built-in API key.
+     * @param string $endpointUrl The API endpoint base URL you wish to connect to. Set this to SoapClient::API_PRIVATE_ENDPOINT to connect via SoftLayer's private network.
+     * @return SoapClient
      */
     public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null)
     {
         $serviceName = trim($serviceName);
 
         if ($serviceName == null) {
-            throw new Exception('Please provide a SoftLayer API service name.');
+            throw new \Exception('Please provide a SoftLayer API service name.');
         }
 
         /*
@@ -250,18 +244,18 @@ class Softlayer_SoapClient extends SoapClient
             $endpointUrl = trim($endpointUrl);
 
             if ($endpointUrl == null) {
-                throw new Exception('Please provide a valid API endpoint.');
+                throw new \Exception('Please provide a valid API endpoint.');
             }
         } elseif (self::API_BASE_URL != null) {
             $endpointUrl = self::API_BASE_URL;
         } else {
-            $endpointUrl = SoftLayer_SoapClient::API_PUBLIC_ENDPOINT;
+            $endpointUrl = self::API_PUBLIC_ENDPOINT;
         }
 
         if (is_null(self::SOAP_TIMEOUT)) {
-            $soapClient = new SoftLayer_SoapClient($endpointUrl . $serviceName . '?wsdl');
+            $soapClient = new self($endpointUrl . $serviceName . '?wsdl');
         } else {
-            $soapClient = new SoftLayer_SoapClient($endpointUrl . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
+            $soapClient = new self($endpointUrl . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
         }
 
         $soapClient->_serviceName = $serviceName;
@@ -291,11 +285,11 @@ class Softlayer_SoapClient extends SoapClient
      * @see removeHeader()
      * @param string $name The name of the header you wish to set
      * @param object $value The object you wish to set in this header
-     * @return SoftLayer_SoapClient
+     * @return SoapClient
      */
     public function addHeader($name, $value)
     {
-        $this->_headers[$name] = new SoapHeader(self::DEFAULT_NAMESPACE, $name, $value);
+        $this->_headers[$name] = new \SoapHeader(self::DEFAULT_NAMESPACE, $name, $value);
         return $this;
     }
 
@@ -306,7 +300,7 @@ class Softlayer_SoapClient extends SoapClient
      *
      * @see addHeader()
      * @param string $name The name of the header you wish to remove
-     * @return SoftLayer_SoapClient
+     * @return SoapClient
      */
     public function removeHeader($name)
     {
@@ -323,7 +317,7 @@ class Softlayer_SoapClient extends SoapClient
      * @link https://manage.softlayer.com/Administrative/apiKeychain API key management in the SoftLayer customer portal
      * @param string $username
      * @param string $apiKey
-     * @return SoftLayer_SoapClient
+     * @return SoapClient
      */
     public function setAuthentication($username, $apiKey)
     {
@@ -331,14 +325,14 @@ class Softlayer_SoapClient extends SoapClient
         $apiKey = trim($apiKey);
 
         if ($username == null) {
-            throw new Exception('Please provide a SoftLayer API username.');
+            throw new \Exception('Please provide a SoftLayer API username.');
         }
 
         if ($apiKey == null) {
-            throw new Exception('Please provide a SoftLayer API key.');
+            throw new \Exception('Please provide a SoftLayer API key.');
         }
 
-        $header = new stdClass();
+        $header = new \stdClass();
         $header->username = $username;
         $header->apiKey   = $apiKey;
 
@@ -358,14 +352,14 @@ class Softlayer_SoapClient extends SoapClient
      *
      * @link http://sldn.softlayer.com/article/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
      * @param int $id The ID number of the SoftLayer API object you wish to instantiate.
-     * @return SoftLayer_SoapClient
+     * @return SoapClient
      */
     public function setInitParameter($id)
     {
         $id = trim($id);
 
         if (!is_null($id)) {
-            $initParameters = new stdClass();
+            $initParameters = new \stdClass();
             $initParameters->id = $id;
             $this->addHeader($this->_serviceName . 'InitParameters', $initParameters);
         }
@@ -380,21 +374,21 @@ class Softlayer_SoapClient extends SoapClient
      * Object masks are skeleton objects or strings that define nested relational
      * properties to retrieve along with an object's local properties.
      *
-     * @see SoftLayer_ObjectMask
+     * @see ObjectMask
      * @link http://sldn.softlayer.com/article/Using-Object-Masks-SoftLayer-API Using object masks in the SoftLayer API
      * @param object $mask The object mask you wish to define
-     * @return SoftLayer_SoapClient
+     * @return SoapClient
      */
     public function setObjectMask($mask)
     {
         if (!is_null($mask)) {
-             $header = 'SoftLayer_ObjectMask';
+             $header = 'ObjectMask';
 
-            if ($mask instanceof SoftLayer_ObjectMask) {
+            if ($mask instanceof ObjectMask) {
                 $header = sprintf('%sObjectMask', $this->_serviceName);
             }
 
-            $objectMask = new stdClass();
+            $objectMask = new \stdClass();
             $objectMask->mask = $mask;
             $this->addHeader($header, $objectMask);
         }
@@ -408,9 +402,9 @@ class Softlayer_SoapClient extends SoapClient
      * Use an object filter to limit what data you get back
      * from the API. Very similar to objectMasks
      *
-     * @see SoftLayer_ObjectMask
+     * @see ObjectMask
      * @param object $filter The object filter you wish to define
-     * @return SoftLayer_SoapClient
+     * @return SoapClient
      */
     public function setObjectFilter($objectFilter)
     {
@@ -430,11 +424,11 @@ class Softlayer_SoapClient extends SoapClient
      * @link http://sldn.softlayer.com/article/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
      * @param int $limit The number of results to limit your SoftLayer API call to.
      * @param int $offset An optional offset to begin your SoftLayer API call's returned result set at.
-     * @return SoftLayer_SoapClient
+     * @return SoapClient
      */
     public function setResultLimit($limit, $offset = 0)
     {
-        $resultLimit = new stdClass();
+        $resultLimit = new \stdClass();
         $resultLimit->limit = intval($limit);
         $resultLimit->offset = intval($offset);
 
@@ -445,11 +439,11 @@ class Softlayer_SoapClient extends SoapClient
     /**
      * Process a SOAP request
      *
-     * We've overwritten the PHP SoapClient's __doRequest() to allow processing
+     * We've overwritten the PHP \SoapClient's __doRequest() to allow processing
      * asynchronous SOAP calls. If an asynchronous call was deected in the
      * __call() method then send processing to the
-     * SoftLayer_SoapClient_AsynchronousAction class. Otherwise use the
-     * SoapClient's built-in __doRequest() method. The results of this method
+     * AsynchronousAction class. Otherwise use the
+     * \SoapClient's built-in __doRequest() method. The results of this method
      * are sent back to __call() for post-processing. Asynchronous calls use
      * handleAsyncResult() to send he results of the call back to __call().
      *
@@ -470,14 +464,14 @@ class Softlayer_SoapClient extends SoapClient
             $this->oneWay = false;
         }
 
-        // Use either the SoapClient or SoftLayer_SoapClient_AsynchronousAction
+        // Use either the \SoapClient or AsynchronousAction
         // class to handle the call.
         if ($this->_asynchronous == false) {
             $result = parent::__doRequest($request, $location, $action, $version, $one_way);
 
             return $result;
         } else {
-            $this->_asyncAction = new SoftLayer_SoapClient_AsynchronousAction($this, $this->asyncFunctionName, $request, $location, $action);
+            $this->_asyncAction = new AsynchronousAction($this, $this->asyncFunctionName, $request, $location, $action);
             return '';
         }
     }
@@ -485,7 +479,7 @@ class Softlayer_SoapClient extends SoapClient
     /**
      * Process the results of an asynchronous call.
      *
-     * The SoftLayer_SoapClient_AsynchronousAction class uses
+     * The AsynchronousAction class uses
      * handleAsyncResult() to return it's call resuls back to this classes'
      * __call() method for post-pocessing.
      *

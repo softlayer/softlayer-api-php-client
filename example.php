@@ -27,16 +27,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+use SoftLayer\Common\ObjectMask;
+use SoftLayer\SoapClient;
+use SoftLayer\XmlRpcClient;
+
 /**
- * Start by including the API client class. This example assumes that the
- * SoftLayer API classes are in the directory "SoftLayer" relative to this
- * script's path.
+ * Start by including the autoload class.
  *
  * If you wish to use the XML-RPC API then replace mentions of
- * SoapClient.class.php with XmlrpcClient.class.php and SoftLayer_SoapClient
- * with SoftLayer_XmlrpcClient.
+ * SoapClient with XmlRpcClient.
  */
-require_once dirname(__FILE__) . '/SoftLayer/SoapClient.class.php';
+$files = [
+    __DIR__.'/vendor/autoload.php',
+    __DIR__.'/../../autoload.php',
+];
+
+$autoload = false;
+foreach ($files as $file) {
+    if (is_file($file)) {
+        $autoload = include_once $file;
+
+        break;
+    }
+}
+
+if (!$autoload) {
+    die(<<<MSG
+Unable to find autoload.php file, please use composer to load dependencies:
+
+wget http://getcomposer.org/composer.phar
+php composer.phar install
+
+Visit http://getcomposer.org/ for more information.
+
+MSG
+);
+}
 
 /**
  * It's possible to define your SoftLayer API username and key diredtly in the
@@ -48,7 +74,7 @@ $apiKey = 'set me too';
 
 /**
  * Usage:
- * SoftLayer_SoapClient::getClient([API Service], <object id>, [username], [API key]);
+ * SoapClient::getClient([API Service], <object id>, [username], [API key]);
  *
  * API Service: The name of the API service you wish to connect to.
  * id:          An optional id to initialize your API service with, if you're
@@ -57,7 +83,7 @@ $apiKey = 'set me too';
  * username:    Your SoftLayer API username.
  * API key:     Your SoftLayer API key,
  */
-$client = SoftLayer_SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey);
+$client = SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey);
 
 /**
  * Once your client object is created you can call API methods for that service
@@ -71,7 +97,7 @@ $client = SoftLayer_SoapClient::getClient('SoftLayer_Account', null, $apiUsernam
  */
 try {
     print_r($client->getObject());
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die($e->getMessage());
 }
 
@@ -84,10 +110,10 @@ try {
  */
 
 // Declare an API client to connect to the SoftLayer_Ticket API service.
-$client = SoftLayer_SoapClient::getClient('SoftLayer_Ticket', 123456, $apiUsername, $apiKey);
+$client = SoapClient::getClient('SoftLayer_Ticket', 123456, $apiUsername, $apiKey);
 
 // Assign an object mask to our API client:
-$objectMask = new SoftLayer_ObjectMask();
+$objectMask = new ObjectMask();
 $objectMask->updates;
 $objectMask->assignedUser;
 $objectMask->attachedHardware->datacenter;
@@ -97,17 +123,17 @@ $client->setObjectMask($objectMask);
 try {
     $ticket = $client->getObject();
     print_r($ticket);
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die('Unable to retrieve ticket record: ' . $e->getMessage());
 }
 
 // Now update the ticket.
-$update = new stdClass();
+$update = new \stdClass();
 $update->entry = 'Hello!';
 
 try {
     $update = $client->addUpdate($update);
     echo "Updated ticket 123456. The new update's id is " . $update[0]->id . '.';
-} catch (Exception $e) {
+} catch (\Exception $e) {
     die('Unable to update ticket: ' . $e->getMessage());
 }

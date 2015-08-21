@@ -27,12 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace SoftLayer\Common;
+
 /**
  * A simple object mask implementation.
  *
- * Use this class instead of stdClass when defining object masks in SoftLayer
+ * Use this class instead of \stdClass when defining object masks in SoftLayer
  * API calls. This one is a bit easier to use. For example, to declare a new
- * object mask using stdClass enter:
+ * object mask using \stdClass enter:
  *
  * $objectMask = new StdClass();
  * $objectMask->datacenter = new StdClass();
@@ -41,16 +43,16 @@
  * $objectMask->softwareComponents = new StdClass();
  * $objectMask->softwareComponents->passwords = new StdClass();
  *
- * Building an object mask using SoftLayer_ObjectMask is a bit easier to
+ * Building an object mask using ObjectMask is a bit easier to
  * type:
  *
- * $objectMask = new SoftLayer_ObjectMask();
+ * $objectMask = new ObjectMask();
  * $objectMask->datacenter;
  * $objectMask->serverRoom;
  * $objectMask->provisionDate;
  * $objectMask->sofwareComponents->passwords;
  *
- * Use SoftLayer_SoapClient::setObjectMask() to set these object masks before
+ * Use SoapClient::setObjectMask() to set these object masks before
  * making your SoftLayer API calls.
  *
  * For more on object mask usage in the SoftLayer API please see
@@ -65,10 +67,10 @@
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
  * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/article/License
- * @see         SoftLayer_SoapClient::setObjectMask()
- * @see         SoftLayer_XmlrpcClient::setObjectMask()
+ * @see         SoapClient::setObjectMask()
+ * @see         XmlRpcClient::setObjectMask()
  */
-class SoftLayer_ObjectMask
+class ObjectMask
 {
     /**
      * Define an object mask value
@@ -77,7 +79,7 @@ class SoftLayer_ObjectMask
      */
     public function __get($var)
     {
-        $this->{$var} = new SoftLayer_ObjectMask();
+        $this->{$var} = new self();
 
         return $this->{$var};
     }

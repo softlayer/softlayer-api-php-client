@@ -1,0 +1,28 @@
+{
+    "name": "softlayer/softlayer-api-php-client",
+    "description": "SoftLayer API PHP client",
+    "keywords": ["softlayer"],
+    "homepage": "http://sldn.softlayer.com/article/PHP",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "SoftLayer Development Team",
+            "email": "sldn@softlayer.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "ext-xmlrpc": "*",
+        "ext-soap": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SoftLayer\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
