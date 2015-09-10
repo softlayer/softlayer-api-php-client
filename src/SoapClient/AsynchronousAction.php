@@ -27,6 +27,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace SoftLayer\SoapClient;
+
+use SoftLayer\SoapClient;
+
 /**
  * Support for asynchronous SoftLayer SOAP API calls
  *
@@ -44,7 +48,7 @@
  * Asynchronous calls are handled identically to standard API calls with two
  * differences:
  *
- * 1) The SoftLayer_SoapClient class knows to make an asynchronous call when the
+ * 1) The SoapClient class knows to make an asynchronous call when the
  * method called ends with "Async". For example, to make a standard call to the
  * method getObject() you would execute $client->geObject(). It's asynchronous
  * counterpart is execued with the code $client->getObjectAsync(). Once the
@@ -52,9 +56,9 @@
  * classes' socket property.
  *
  * 2) The results of an asynchronous method call are stored in a
- * SoftLayer_SoapClient_AsynchronousAction object. Use the wait() method to
+ * AsynchronousAction object. Use the wait() method to
  * retrieve data off the internal socket and return the result back to the
- * SoftLayer_SoapClient for processing. For example if you wish to retrieve the
+ * SoapClient for processing. For example if you wish to retrieve the
  * results of the method getObject() execute the following statements:
  *
  * $result = $client->getObjectAsync(); // Make the call and start geting data back.
@@ -70,7 +74,7 @@
  * ----------
  *
  * // Initialize an API client for the SoftLayer_Account service.
- * $client = SoftLayer_SoapClient::getClient('SoftLayer_Account');
+ * $client = SoapClient::getClient('SoftLayer_Account');
  *
  * try {
  *     // Request our account information.
@@ -94,7 +98,7 @@
  *     var_dump($account);
  *     var_dump($nextInvoicePdf);
  *     var_dump($vlanSpanResult);
- * } catch (Exception $e) {
+ * } catch (\Exception $e) {
  *     die('Unable to retrieve account information: ' . $e->getMessage());
  * }
  *
@@ -109,14 +113,14 @@
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
  * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/article/License
- * @see         SoftLayer_SoapClient
+ * @see         SoapClient
  */
-class SoftLayer_SoapClient_AsynchronousAction
+class AsynchronousAction
 {
     /**
      * The SoftLayer SOAP client making an asynchronous call
      *
-     * @var SoftLayer_SoapClient
+     * @var SoapClient
      */
     protected $_soapClient;
 
@@ -138,11 +142,11 @@ class SoftLayer_SoapClient_AsynchronousAction
      * Perform an asynchgronous SoftLayer SOAP call
      *
      * Create a raw socket connection to the URL specified by the
-     * SoftLayer_SoapClient class and send SOAP HTTP headers and request XML to
+     * SoapClient class and send SOAP HTTP headers and request XML to
      * that socket. Throw exceptions if we're unable to make the socket
      * connection or send data to that socket.
      *
-     * @param SoftLayer_SoapClient $soapClient The SoftLayer SOAP client making the asynchronous call.
+     * @param SoapClient $soapClient The SoftLayer SOAP client making the asynchronous call.
      * @param string $functionName The name of the function we're calling.
      * @param string $request The full XML SOAP request we wish to make.
      * @param string $location The URL of the web service we wish to call.
@@ -181,11 +185,11 @@ class SoftLayer_SoapClient_AsynchronousAction
 
         if ($this->_socket === false) {
             $this->_socket = null;
-            throw new Exception('Unable to make an asynchronous SoftLayer API call: ' . $errorNumber . ': ' . $errorMessage);
+            throw new \Exception('Unable to make an asynchronous SoftLayer API call: ' . $errorNumber . ': ' . $errorMessage);
         }
 
         if (fwrite($this->_socket, $data) === false) {
-            throw new Exception('Unable to write data to an asynchronous SoftLayer API call.');
+            throw new \Exception('Unable to write data to an asynchronous SoftLayer API call.');
         }
     }
 
@@ -193,7 +197,7 @@ class SoftLayer_SoapClient_AsynchronousAction
      * Process and return the results of an asyncrhonous SoftLayer API call
      *
      * Read data from our socket and process the raw SOAP result from the
-     * SoftLayer_SoapClient instance that made the asynchronous call. wait()
+     * SoapClient instance that made the asynchronous call. wait()
      * *must* be called in order to recieve the results from your API call.
      *
      * @return object
