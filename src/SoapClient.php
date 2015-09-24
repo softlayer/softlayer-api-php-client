@@ -382,7 +382,7 @@ class SoapClient extends \SoapClient
     public function setObjectMask($mask)
     {
         if (!is_null($mask)) {
-             $header = 'ObjectMask';
+             $header = 'SoftLayer_ObjectMask';
 
             if ($mask instanceof ObjectMask) {
                 $header = sprintf('%sObjectMask', $this->_serviceName);
