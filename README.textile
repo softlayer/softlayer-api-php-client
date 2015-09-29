@@ -1,5 +1,10 @@
 h1. A SoftLayer API PHP client.
 
+h2. Warning
+
+```The latest version 1.x is not backwards-compatible.
+It is necessary to update scripts to function properly with the new version.```
+
 h2. Overview
 
 The SoftLayer API PHP client classes provide a simple method for connecting to and making calls from the SoftLayer API and provides support for many of the SoftLayer API's features. Method calls and client management are handled by the PHP SOAP and XML-RPC extensions.
