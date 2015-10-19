@@ -9,7 +9,7 @@ h2. Overview
 
 The SoftLayer API PHP client classes provide a simple method for connecting to and making calls from the SoftLayer API and provides support for many of the SoftLayer API's features. Method calls and client management are handled by the PHP SOAP and XML-RPC extensions.
 
-Making API calls using the \SoftLayer\SoapClient or \SoftLayer\XmlRpcClient classes is done in the following steps:
+Making API calls using the `\SoftLayer\SoapClient` or \SoftLayer\XmlRpcClient classes is done in the following steps:
 
 # Instantiate a new `\SoftLayer\SoapClient` or \SoftLayer\XmlRpcClient object using the \SoftLayer\SoapClient::getClient() or \SoftLayer\XmlRpcClient::getClient() methods. Provide the name of the service that you wish to query, an optional id number of the object that you wish to instantiate, your SoftLayer API username, your SoftLayer API key, and an optional API endpoint base URL. The client classes default to connect over the public Internet. Enter \SoftLayer\SoapClient::API_PRIVATE_ENDPOINT or \SoftLayer\XmlRpcClient::API_PRIVATE_ENDPOINT to connect to the API over SoftLayer's private network. The system making API calls must be connected to SoftLayer's private network (eg. purchased from SoftLayer or connected via VPN) in order to use the private network API endpoints.
 # Define and add optional headers to the client, such as object masks and result limits.
