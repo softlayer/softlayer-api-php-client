@@ -74,7 +74,7 @@ $apiKey = 'set me too';
 $client = \SoftLayer\SoapClient::getClient('SoftLayer_Ticket', 123456, $apiUsername, $apiKey);
 
 // Create an object mask and assign it to our API client.
-$objectMask = new \SoftLayer\ObjectMask();
+$objectMask = new \SoftLayer\Common\ObjectMask();
 $objectMask->updates;
 $objectMask->assignedUser;
 $objectMask->attachedHardware->datacenter;
