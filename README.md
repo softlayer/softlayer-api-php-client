@@ -19,7 +19,7 @@ Making API calls using the `\SoftLayer\SoapClient` or `\SoftLayer\XmlRpcClient` 
 
 Once your method is executed you may continue using the same client if you need to connect to the same service or define another client object if you wish to work with multiple services at once.
 
-The most up to date version of this library can be found on the SoftLayer github public repositories: [http://github.com/softlayer/](http://github.com/softlayer/) . Please post to the SoftLayer forums <[http://forums.softlayer.com/](http://forums.softlayer.com/)> or open a support ticket in the SoftLayer customer portal if you have any questions regarding use of this library.
+The most up to date version of this library can be found on the SoftLayer github public repositories: [http://github.com/softlayer/](http://github.com/softlayer/) . Please post to the SoftLayer forums [Stack Overflow](https://stackoverflow.com) or open a support ticket in the SoftLayer customer portal if you have any questions regarding use of this library. If you use Stack Overflow please tag your posts with “SoftLayer” so our team can easily find your post. 
 
 ## System Requirements
 
