@@ -509,4 +509,34 @@ class SoapClient extends \SoapClient
 
         return $this->__call($functionName, array());
     }
+
+    /**
+     * Returns the headers set for this client object.
+     * 
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->_headers;
+    }
+
+    /**
+     * Returns the service name
+     * 
+     * @return array
+     */
+    public function getServiceName()
+    {
+        return $this->_serviceName;
+    }
+
+    /**
+     * Returns the endpoint URL
+     * 
+     * @return array
+     */
+    public function getEndpointUrl()
+    {
+        return $this->_endpointUrl;
+    }
 }
