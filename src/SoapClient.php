@@ -202,7 +202,7 @@ class SoapClient extends \SoapClient
         try {
             $result = parent::__call($functionName, $arguments, null, $this->_headers, null);
         } catch (\SoapFault $e) {
-            throw new \Exception('There was an error querying the SoftLayer API: '.$e->getMessage());
+            throw new \Exception('There was an error querying the SoftLayer API: ' . $e->getMessage(), 0, $e);
         }
 
         if ($this->_asynchronous) {
