@@ -12,6 +12,7 @@ jobs:
     - uses: php-actions/phpunit@v3
       with:
         php_version: '8.1'
+        php_extensions: 'soap'
     - uses: actions/upload-artifact@v2
       with:
         name: debug-output
