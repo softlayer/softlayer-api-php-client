@@ -99,6 +99,7 @@ $client->setObjectMask($objectMask);
 
 try {
     $result = $client->getObject();
+    //$client->__getLastRequest();
     print_r($result);
 } catch (\Exception $e) {
     die($e->getMessage());

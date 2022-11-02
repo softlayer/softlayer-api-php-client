@@ -55,16 +55,14 @@ use SoftLayer\SoapClient\AsynchronousAction;
 class SoapClient extends \SoapClient
 {
     /**
-     * Your SoftLayer API username. You may overide this value when calling
-     * getClient().
+     * Your SoftLayer API username. You may overide this value when calling getClient().
      *
      * @var string
      */
     const API_USER = 'set me';
 
     /**
-     * Your SoftLayer API user's authentication key. You may overide this value
-     * when calling getClient().
+     * Your SoftLayer API user's authentication key. You may overide this value when calling getClient().
      *
      * @link https://sldn.softlayer.com/article/authenticating-softlayer-api/ API key management in the SoftLayer customer portal
      * @var string
@@ -72,16 +70,14 @@ class SoapClient extends \SoapClient
     const API_KEY = 'set me';
 
     /**
-     * The base URL of the SoftLayer SOAP API's WSDL files over the public
-     * Internet.
+     * The base URL of the SoftLayer SOAP API's WSDL files over the public Internet.
      *
      * @var string
      */
     const API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/soap/v3.1/';
 
     /**
-     * The base URL of the SoftLayer SOAP API's WSDL files over SoftLayer's
-     * private network.
+     * The base URL of the SoftLayer SOAP API's WSDL files over SoftLayer's private network.
      *
      * @var string
      */
@@ -102,8 +98,7 @@ class SoapClient extends \SoapClient
     const API_BASE_URL = SoapClient::API_PUBLIC_ENDPOINT;
 
     /**
-     * An optional SOAP timeout if you want to set a timeout independent of
-     * PHP's socket timeout.
+     * An optional SOAP timeout if you want to set a timeout independent of PHP's socket timeout.
      *
      * @var int
      */
@@ -182,7 +177,7 @@ class SoapClient extends \SoapClient
     {
         // Determine if we shoud be making an asynchronous call. If so strip
         // "Async" from the end of the method name.
-        if (null === $this->_asyncResult) {
+        if ($this->_asyncResult === null) {
             $this->_asynchronous = false;
             $this->_asyncAction = null;
 
@@ -213,10 +208,9 @@ class SoapClient extends \SoapClient
     /**
      * Create a SoftLayer API SOAP Client.
      *
-     * Retrieve a new SoapClient object for a specific SoftLayer API
-     * service using either the class' constants API_USER and API_KEY or a
-     * custom username and API key for authentication. Provide an optional id
-     * value if you wish to instantiate a particular SoftLayer API object.
+     * Retrieve a new SoapClient object for a specific SoftLayer API service using either the class' 
+     * constants API_USER and API_KEY or a custom username and API key for authentication. 
+     * Provide an optional id value if you wish to instantiate a particular SoftLayer API object.
      *
      * @param string $serviceName The name of the SoftLayer API service you wish to query
      * @param int    $id          An optional object id if you're instantiating a particular SoftLayer API object. Setting an id defines this client's initialization parameter header.
@@ -226,8 +220,7 @@ class SoapClient extends \SoapClient
      * @param bool $trace Enabled SOAP trace in the client object.
      * @return SoapClient
      */
-    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null,
-                                     $endpointUrl = null, $trace = false)
+    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null, $trace = false)
     {
         $serviceName = trim($serviceName);
 
@@ -263,7 +256,7 @@ class SoapClient extends \SoapClient
         $soapClient->_serviceName = $serviceName;
         $soapClient->_endpointUrl = $endpointUrl;
 
-        if (empty($username) && empty($apiKey)) {
+        if (!empty($username) && !empty($apiKey)) {
             $soapClient->setAuthentication($username, $apiKey);
         } else {
             $soapClient->setAuthentication(self::API_USER, self::API_KEY);
