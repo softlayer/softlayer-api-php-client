@@ -9,6 +9,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: php-actions/composer@v6 # or alternative dependency management
+      with:
+        php_version: '8.1'
+        php_extensions: 'soap'
     - uses: php-actions/phpunit@v3
       with:
         php_version: '8.1'
