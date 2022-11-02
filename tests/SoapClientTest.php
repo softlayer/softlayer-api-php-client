@@ -38,7 +38,6 @@ class SoapClientTest extends TestCase
         $client->setObjectFilter($filter);
 
         $headers = $client->getHeaders();
-        print_r($headers);
         $this->assertEquals("testFilter", $headers['SoftLayer_TicketObjectFilter']->data->test1->operation);
     }
 }
