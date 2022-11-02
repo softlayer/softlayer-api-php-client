@@ -1,0 +1,18 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: php-actions/composer@v6 # or alternative dependency management
+    - uses: php-actions/phpunit@v3
+      with:
+        php_version: '8.1'
+    - uses: actions/upload-artifact@v2
+      with:
+        name: debug-output
+        path: output.log
