@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2009 - 2010, SoftLayer Technologies, Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +33,7 @@ namespace SoftLayer;
 use SoftLayer\Common\ObjectMask;
 
 /**
- * A SoftLayer API XML-RPC Client
+ * A SoftLayer API XML-RPC Client.
  *
  * Please see the bundled README.textile file for more details and usage
  * information.
@@ -43,10 +44,11 @@ use SoftLayer\Common\ObjectMask;
  * in the SoftLayer customer portal if you have any questions regarding use of
  * this library.
  *
- * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
- * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
- * @license     http://sldn.softlayer.com/article/License
- * @link        http://sldn.softlayer.com/article/The_SoftLayer_API The SoftLayer API
+ * @author     SoftLayer Technologies, Inc. <sldn@softlayer.com>
+ * @copyright  Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
+ * @license    http://sldn.softlayer.com/article/License
+ *
+ * @see        http://sldn.softlayer.com/article/The_SoftLayer_API The SoftLayer API
  */
 class XmlRpcClient
 {
@@ -62,7 +64,8 @@ class XmlRpcClient
      * Your SoftLayer API user's authentication key. You may overide this value
      * when calling getClient().
      *
-     * @link https://manage.softlayer.com/Administrative/apiKeychain API key management in the SoftLayer customer portal
+     * @see https://manage.softlayer.com/Administrative/apiKeychain API key management in the SoftLayer customer portal
+     *
      * @var string
      */
     const API_KEY = 'set me';
@@ -89,7 +92,7 @@ class XmlRpcClient
     const API_BASE_URL = self::API_PUBLIC_ENDPOINT;
 
     /**
-     * The headers to send along with a SoftLayer API call
+     * The headers to send along with a SoftLayer API call.
      *
      * @var array
      */
@@ -98,7 +101,8 @@ class XmlRpcClient
     /**
      * The name of the SoftLayer API service you wish to query.
      *
-     * @link http://sldn.softlayer.com/reference/services A list of SoftLayer API services
+     * @see http://sldn.softlayer.com/reference/services A list of SoftLayer API services
+     *
      * @var string
      */
     protected $_serviceName;
@@ -111,7 +115,7 @@ class XmlRpcClient
     protected $_endpointUrl;
 
     /**
-     * Execute a SoftLayer API method
+     * Execute a SoftLayer API method.
      *
      * @return object
      */
@@ -131,22 +135,22 @@ class XmlRpcClient
                 'http' => array(
                     'method' => 'POST',
                     'header' => 'Content-Type: text/xml',
-                    'content' => $encodedRequest
-                )));
+                    'content' => $encodedRequest,
+                ), ));
 
-            $file = file_get_contents($this->_endpointUrl . $this->_serviceName, false, $context);
+            $file = file_get_contents($this->_endpointUrl.$this->_serviceName, false, $context);
 
-            if ($file === false) {
-                throw new \Exception('Unable to contact the SoftLayer API at ' . $this->_endpointUrl . $serviceName . '.');
+            if (false === $file) {
+                throw new \Exception('Unable to contact the SoftLayer API at '.$this->_endpointUrl.$serviceName.'.');
             }
 
             $result = xmlrpc_decode($file);
         } catch (\Exception $e) {
-            throw new \Exception('There was an error querying the SoftLayer API: ' . $e->getMessage());
+            throw new \Exception('There was an error querying the SoftLayer API: '.$e->getMessage());
         }
 
         if (is_array($result) && xmlrpc_is_fault($result)) {
-            throw new \Exception('There was an error querying the SoftLayer API: ' . $result['faultString']);
+            throw new \Exception('There was an error querying the SoftLayer API: '.$result['faultString']);
         }
 
         // remove the resultLimit header if they set it
@@ -156,7 +160,7 @@ class XmlRpcClient
     }
 
     /**
-     * Create a SoftLayer API XML-RPC Client
+     * Create a SoftLayer API XML-RPC Client.
      *
      * Retrieve a new XmlRpcClient object for a specific SoftLayer API
      * service using either the class' constants API_USER and API_KEY or a
@@ -164,20 +168,18 @@ class XmlRpcClient
      * value if you wish to instantiate a particular SoftLayer API object.
      *
      * @param string $serviceName The name of the SoftLayer API service you wish to query
-     * @param int $id An optional object id if you're instantiating a particular SoftLayer API object. Setting an id defines this client's initialization parameter header.
-     * @param string $username An optional API username if you wish to bypass XmlRpcClient's built-in username.
-     * @param string $username An optional API key if you wish to bypass XmlRpcClient's built-in API key.
+     * @param int    $id          An optional object id if you're instantiating a particular SoftLayer API object. Setting an id defines this client's initialization parameter header.
+     * @param string $username    an optional API username if you wish to bypass XmlRpcClient's built-in username
+     * @param string $apiKey      an optional API key if you wish to bypass XmlRpcClient's built-in API key
      * @param string $endpointUrl The API endpoint base URL you wish to connect to. Set this to XmlRpcClient::API_PRIVATE_ENDPOINT to connect via SoftLayer's private network.
+     *
      * @return XmlRpcClient
      */
     public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null)
     {
         $serviceName = trim($serviceName);
-        $id = trim($id);
-        $username = trim($username);
-        $apiKey = trim($apiKey);
 
-        if ($serviceName == null) {
+        if ('' === $serviceName) {
             throw new \Exception('Please provide a SoftLayer API service name.');
         }
 
@@ -188,10 +190,10 @@ class XmlRpcClient
          * endpoint defined in API_PUBLIC_ENDPOINT, otherwise use the one
          * provided by the user.
          */
-        if (isset($endpointUrl)) {
+        if (null !== $endpointUrl) {
             $endpointUrl = trim($endpointUrl);
 
-            if ($endpointUrl == null) {
+            if ('' === $endpointUrl) {
                 throw new \Exception('Please provide a valid API endpoint.');
             }
 
@@ -202,7 +204,10 @@ class XmlRpcClient
             $client->_endpointUrl = self::API_PUBLIC_ENDPOINT;
         }
 
-        if ($username != null && $apiKey != null) {
+        $username = trim($username);
+        $apiKey = trim($apiKey);
+
+        if ('' !== $username && '' !== $apiKey) {
             $client->setAuthentication($username, $apiKey);
         } else {
             $client->setAuthentication(self::API_USER, self::API_KEY);
@@ -210,7 +215,9 @@ class XmlRpcClient
 
         $client->_serviceName = $serviceName;
 
-        if ($id != null) {
+        $id = trim($id);
+
+        if ('' !== $id) {
             $client->setInitParameter($id);
         }
 
@@ -218,7 +225,7 @@ class XmlRpcClient
     }
 
     /**
-     * Set a SoftLayer API call header
+     * Set a SoftLayer API call header.
      *
      * Every header defines a customization specific to an SoftLayer API call.
      * Most API calls require authentication and initialization parameter
@@ -226,69 +233,79 @@ class XmlRpcClient
      * result limits if they're supported by the API method you're calling.
      *
      * @see removeHeader()
-     * @param string $name The name of the header you wish to set
+     *
+     * @param string $name  The name of the header you wish to set
      * @param object $value The object you wish to set in this header
+     *
      * @return XmlRpcClient
      */
     public function addHeader($name, $value)
     {
         if (is_object($value)) {
-            $value = (array)$value;
+            $value = (array) $value;
         }
 
         $this->_headers[$name] = $value;
+
         return $this;
     }
 
     /**
-     * Remove a SoftLayer API call header
+     * Remove a SoftLayer API call header.
      *
      * Removing headers may cause API queries to fail.
      *
      * @see addHeader()
+     *
      * @param string $name The name of the header you wish to remove
+     *
      * @return XmlRpcClient
      */
     public function removeHeader($name)
     {
         unset($this->_headers[$name]);
+
         return $this;
     }
 
     /**
-     * Set a user and key to authenticate a SoftLayer API call
+     * Set a user and key to authenticate a SoftLayer API call.
      *
      * Use this method if you wish to bypass the API_USER and API_KEY class
      * constants and set custom authentication per API call.
      *
-     * @link https://manage.softlayer.com/Administrative/apiKeychain API key management in the SoftLayer customer portal
+     * @see https://manage.softlayer.com/Administrative/apiKeychain API key management in the SoftLayer customer portal
+     *
      * @param string $username
      * @param string $apiKey
+     *
      * @return XmlRpcClient
      */
     public function setAuthentication($username, $apiKey)
     {
         $username = trim($username);
-        $apiKey = trim($apiKey);
 
-        if ($username == null) {
+        if ('' === $username) {
             throw new \Exception('Please provide a SoftLayer API username.');
         }
 
-        if ($apiKey == null) {
+        $apiKey = trim($apiKey);
+
+        if ('' === $apiKey) {
             throw new \Exception('Please provide a SoftLayer API key.');
         }
 
         $header = new \stdClass();
         $header->username = $username;
-        $header->apiKey   = $apiKey;
+        $header->apiKey = $apiKey;
 
         $this->addHeader('authenticate', $header);
+
         return $this;
     }
 
     /**
-     * Set an initialization parameter header on a SoftLayer API call
+     * Set an initialization parameter header on a SoftLayer API call.
      *
      * Initialization parameters instantiate a SoftLayer API service object to
      * act upon during your API method call. For instance, if your account has a
@@ -296,39 +313,43 @@ class XmlRpcClient
      * 1234 in the SoftLayer_Hardware_Server Service instructs the API to act on
      * server record 1234 in your method calls.
      *
-     * @link http://sldn.softlayer.com/article/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
-     * @param int $id The ID number of the SoftLayer API object you wish to instantiate.
+     * @see http://sldn.softlayer.com/article/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
+     *
+     * @param int $id the ID number of the SoftLayer API object you wish to instantiate
+     *
      * @return XmlRpcClient
      */
     public function setInitParameter($id)
     {
         $id = trim($id);
 
-        if (!is_null($id)) {
+        if ('' !== $id) {
             $initParameters = new \stdClass();
             $initParameters->id = $id;
-            $this->addHeader($this->_serviceName . 'InitParameters', $initParameters);
+            $this->addHeader($this->_serviceName.'InitParameters', $initParameters);
         }
 
         return $this;
     }
 
     /**
-     * Set an object mask to a SoftLayer API call
+     * Set an object mask to a SoftLayer API call.
      *
      * Use an object mask to retrieve data related your API call's result.
      * Object masks are skeleton objects or strings that define nested relational
      * properties to retrieve along with an object's local properties.
      *
      * @see ObjectMask
-     * @link http://sldn.softlayer.com/article/Using-Object-Masks-SoftLayer-API Using object masks in the SoftLayer API
+     * @see http://sldn.softlayer.com/article/Using-Object-Masks-SoftLayer-API Using object masks in the SoftLayer API
+     *
      * @param object $mask The object mask you wish to define
+     *
      * @return SoapClient
      */
     public function setObjectMask($mask)
     {
-        if (!is_null($mask)) {
-             $header = 'ObjectMask';
+        if (null !== $mask) {
+            $header = 'ObjectMask';
 
             if ($mask instanceof ObjectMask) {
                 $header = sprintf('%sObjectMask', $this->_serviceName);
@@ -343,29 +364,32 @@ class XmlRpcClient
     }
 
     /**
-     * Set a result limit on a SoftLayer API call
+     * Set a result limit on a SoftLayer API call.
      *
      * Many SoftLayer API methods return a group of results. These methods
      * support a way to limit the number of results retrieved from the SoftLayer
      * API in a way akin to an SQL LIMIT statement.
      *
-     * @link http://sldn.softlayer.com/article/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
-     * @param int $limit The number of results to limit your SoftLayer API call to.
-     * @param int $offset An optional offset to begin your SoftLayer API call's returned result set at.
+     * @see http://sldn.softlayer.com/article/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
+     *
+     * @param int $limit  the number of results to limit your SoftLayer API call to
+     * @param int $offset an optional offset to begin your SoftLayer API call's returned result set at
+     *
      * @return XmlRpcClient
      */
     public function setResultLimit($limit, $offset = 0)
     {
         $resultLimit = new \stdClass();
-        $resultLimit->limit = intval($limit);
-        $resultLimit->offset = intval($offset);
+        $resultLimit->limit = (int) $limit;
+        $resultLimit->offset = (int) $offset;
 
         $this->addHeader('resultLimit', $resultLimit);
+
         return $this;
     }
 
     /**
-     * Remove PHP xmlrpc type definition structures from a decoded request array
+     * Remove PHP xmlrpc type definition structures from a decoded request array.
      *
      * Certain xmlrpc types like base64 are decoded in PHP to a \stdClass with a
      * scalar property containing the decoded value of the xmlrpc member and an
@@ -374,58 +398,58 @@ class XmlRpcClient
      * the xmlrpc value for known xmlrpc types.
      *
      * @param mixed $result The decoded xmlrpc request to process
+     *
      * @return mixed
      */
-    private static function _convertXmlrpcTypes($result) {
+    private static function _convertXmlrpcTypes($result)
+    {
         if (is_array($result)) {
-
             // Return case 1: The result is an empty array. Return the empty
             // array.
-            if (count($result) == 0) {
-                return $result;
-            } else {
-
-                // Return case 2: The result is a non-empty array. Loop through
-                // array elements and recursively translate every element.
-                // Return the fully translated array.
-                foreach ($result as $key => $value) {
-                    $result[$key] = self::_convertXmlrpcTypes($value);
-                }
-
+            if (empty($result)) {
                 return $result;
             }
 
+            // Return case 2: The result is a non-empty array. Loop through
+            // array elements and recursively translate every element.
+            // Return the fully translated array.
+            foreach ($result as $key => $value) {
+                $result[$key] = self::_convertXmlrpcTypes($value);
+            }
+
+            return $result;
+        }
+
         // Return case 3: The result is an xmlrpc scalar. Convert it to a normal
         // variable and return it.
-        } elseif (is_object($result) && $result->scalar != null && $result->xmlrpc_type != null) {
-
+        if (is_object($result) && null !== $result->scalar && null !== $result->xmlrpc_type) {
             // Convert known xmlrpc types, otherwise unset the value.
             switch ($result->xmlrpc_type) {
                 case 'base64':
                     return $result->scalar;
-                    break;
                 default:
                     return null;
-                    break;
             }
+        }
 
         // Return case 4: Otherwise the result is a non-array and non xml-rpc
         // scalar variable. Return it unmolested.
-        } else {
-            return $result;
-        }
+
+        return $result;
     }
 
     /**
-     * Recursively convert an array to an object
+     * Recursively convert an array to an object.
      *
      * Since xmlrpc_decode_result returns an array, but we want an object
      * result, so cast all array parts in our result set as objects.
      *
      * @param mixed $result A result or portion of a result to convert
+     *
      * @return mixed
      */
-    private static function _convertToObject($result) {
+    private static function _convertToObject($result)
+    {
         return is_array($result) ? (object) array_map('\\SoftLayer\\XmlRpcClient::_convertToObject', $result) : $result;
     }
 }
