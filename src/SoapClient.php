@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2009 - 2010, SoftLayer Technologies, Inc. All rights reserved.
+ * Copyright (c) 2009 - 2022, SoftLayer Technologies, Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,24 +35,20 @@ use SoftLayer\SoapClient\AsynchronousAction;
 /**
  * A SoftLayer API SOAP Client
  *
- * Please see the bundled README.textile file for more details and usage
- * information.
+ * Please see the bundled README file for more details and usage information.
  *
- * This client supports sending multiple calls in parallel to the SoftLayer
- * API. Please see the documentation in the
- * AsynchronousAction class in
+ * This client supports sending multiple calls in parallel to the SoftLaye API. 
+ * Please see the documentation in the AsynchronousAction class in
  * SoapClient/AsynchronousAction.php for details.
  *
  * The most up to date version of this library can be found on the SoftLayer
- * github public repositories: http://github.com/softlayer/ . Please post to
- * the SoftLayer forums <http://forums.softlayer.com/> or open a support ticket
- * in the SoftLayer customer portal if you have any questions regarding use of
- * this library.
+ * github public repositories: https://github.com/softlayer/softlayer-api-php-client .
+ * For any issues with this library, please open a github issue
  *
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
- * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
+ * @copyright   Copyright (c) 2009 - 2022, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/article/License
- * @link        http://sldn.softlayer.com/article/The_SoftLayer_API The SoftLayer API
+ * @link        https://sldn.softlayer.com/article/php/ The SoftLayer API
  * @see         AsynchronousAction
  */
 class SoapClient extends \SoapClient
@@ -69,7 +65,7 @@ class SoapClient extends \SoapClient
      * Your SoftLayer API user's authentication key. You may overide this value
      * when calling getClient().
      *
-     * @link https://manage.softlayer.com/Administrative/apiKeychain API key management in the SoftLayer customer portal
+     * @link https://sldn.softlayer.com/article/authenticating-softlayer-api/ API key management in the SoftLayer customer portal
      * @var string
      */
     const API_KEY = 'set me';
@@ -80,7 +76,7 @@ class SoapClient extends \SoapClient
      *
      * @var string
      */
-    const API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/soap/v3/';
+    const API_PUBLIC_ENDPOINT = 'https://api.softlayer.com/soap/v3.1/';
 
     /**
      * The base URL of the SoftLayer SOAP API's WSDL files over SoftLayer's
@@ -88,14 +84,14 @@ class SoapClient extends \SoapClient
      *
      * @var string
      */
-    const API_PRIVATE_ENDPOINT = 'http://api.service.softlayer.com/soap/v3/';
+    const API_PRIVATE_ENDPOINT = 'http://api.service.softlayer.com/soap/v3.1/';
 
     /**
      * The namespace to use for calls to the API
      *
      * $var string
      */
-    const DEFAULT_NAMESPACE = 'http://api.service.softlayer.com/soap/v3/';
+    const DEFAULT_NAMESPACE = 'http://api.service.softlayer.com/soap/v3.1/';
 
 
     /**
@@ -175,6 +171,7 @@ class SoapClient extends \SoapClient
      */
     public $oneWay;
 
+
     /**
      * Execute a SoftLayer API method
      *
@@ -197,7 +194,7 @@ class SoapClient extends \SoapClient
         }
 
         try {
-            $result = parent::__call($functionName, $arguments, null, $this->_headers, null);
+            $result = parent::__soapCall($functionName, $arguments, null, $this->_headers);
         } catch (SoapFault $e) {
             throw new \Exception('There was an error querying the SoftLayer API: ' . $e->getMessage());
         }
@@ -225,9 +222,10 @@ class SoapClient extends \SoapClient
      * @param string $username An optional API username if you wish to bypass SoapClient's built-in username.
      * @param string $username An optional API key if you wish to bypass SoapClient's built-in API key.
      * @param string $endpointUrl The API endpoint base URL you wish to connect to. Set this to SoapClient::API_PRIVATE_ENDPOINT to connect via SoftLayer's private network.
+     * @param bool $trace Enabled SOAP trace in the client object.
      * @return SoapClient
      */
-    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null)
+    public static function getClient($serviceName, $id = null, $username = null, $apiKey = null, $endpointUrl = null, $trace=false)
     {
         $serviceName = trim($serviceName);
 
@@ -252,11 +250,13 @@ class SoapClient extends \SoapClient
             $endpointUrl = self::API_PUBLIC_ENDPOINT;
         }
 
-        if (is_null(self::SOAP_TIMEOUT)) {
-            $soapClient = new self($endpointUrl . $serviceName . '?wsdl');
-        } else {
-            $soapClient = new self($endpointUrl . $serviceName . '?wsdl', array('connection_timeout' => self::SOAP_TIMEOUT));
+        $soapOptions = ['trace' => $trace];
+        if (is_null(self::SOAP_TIMEOUT) == false) {
+            $soapOptions['connection_timeout'] = self::SOAP_TIMEOUT;
         }
+
+        $soapClient = new self($endpointUrl . $serviceName . '?wsdl', $soapOptions);
+
 
         $soapClient->_serviceName = $serviceName;
         $soapClient->_endpointUrl = $endpointUrl;
@@ -350,7 +350,7 @@ class SoapClient extends \SoapClient
      * 1234 in the SoftLayer_Hardware_Server Service instructs the API to act on
      * server record 1234 in your method calls.
      *
-     * @link http://sldn.softlayer.com/article/Using_Initialization_Parameters_in_the_SoftLayer_API Using Initialization Parameters in the SoftLayer API
+     * @link https://sldn.softlayer.com/article/using-initialization-parameters-softlayer-api/ Using Initialization Parameters in the SoftLayer API
      * @param int $id The ID number of the SoftLayer API object you wish to instantiate.
      * @return SoapClient
      */
@@ -421,7 +421,7 @@ class SoapClient extends \SoapClient
      * support a way to limit the number of results retrieved from the SoftLayer
      * API in a way akin to an SQL LIMIT statement.
      *
-     * @link http://sldn.softlayer.com/article/Using_Result_Limits_in_the_SoftLayer_API Using Result Limits in the SoftLayer API
+     * @link https://sldn.softlayer.com/article/using-result-limits-softlayer-api/ Using Result Limits in the SoftLayer API
      * @param int $limit The number of results to limit your SoftLayer API call to.
      * @param int $offset An optional offset to begin your SoftLayer API call's returned result set at.
      * @return SoapClient

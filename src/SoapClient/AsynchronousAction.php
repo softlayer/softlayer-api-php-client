@@ -139,7 +139,7 @@ class AsynchronousAction
     protected $_socket;
 
     /**
-     * Perform an asynchgronous SoftLayer SOAP call
+     * Perform an asynchronous SoftLayer SOAP call
      *
      * Create a raw socket connection to the URL specified by the
      * SoapClient class and send SOAP HTTP headers and request XML to

@@ -65,12 +65,11 @@ MSG
 }
 
 /**
- * It's possible to define your SoftLayer API username and key diredtly in the
- * class file, but it's far easier to define them before creating your API
- * client.
+ * It's possible to define your SoftLayer API username and key directly in the
+ * class file, but it's far easier to define them before creating your API client.
  */
-$apiUsername = 'set me';
-$apiKey = 'set me too';
+$apiUsername = getenv('SL_USER');
+$apiKey = getenv('SL_APIKEY');
 
 /**
  * Usage:
@@ -84,6 +83,8 @@ $apiKey = 'set me too';
  * API key:     Your SoftLayer API key,
  */
 $client = SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey);
+$objectMask = "mask[id,companyName]";
+$client->setObjectMask($objectMask);
 
 /**
  * Once your client object is created you can call API methods for that service
@@ -95,45 +96,36 @@ $client = SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey
  * It retrieves basic account information, and is a great way to test your API
  * account and connectivity.
  */
+
 try {
-    print_r($client->getObject());
+    $result = $client->getObject();
+    print_r($result);
 } catch (\Exception $e) {
     die($e->getMessage());
 }
 
 /**
- * For a more complex example we’ll retrieve a support ticket with id 123456
- * along with the ticket’s updates, the user it’s assigned to, the servers
- * attached to it, and the datacenter those servers are in. We’ll retrieve our
- * extra information using a nested object mask. After we have the ticket we’ll
- * update it with the text ‘Hello!’.
+ * In this example we will get all of the VirtualGuests on our account. And for each guest we will print out
+ * some basic information about them, along with make another API call to get its primaryIpAddress.
  */
 
 // Declare an API client to connect to the SoftLayer_Ticket API service.
-$client = SoapClient::getClient('SoftLayer_Ticket', 123456, $apiUsername, $apiKey);
+$client = SoapClient::getClient('SoftLayer_Account', null, $apiUsername, $apiKey);
+
 
 // Assign an object mask to our API client:
-$objectMask = new ObjectMask();
-$objectMask->updates;
-$objectMask->assignedUser;
-$objectMask->attachedHardware->datacenter;
+$objectMask = "mask[id, hostname, datacenter[longName]]";
 $client->setObjectMask($objectMask);
 
-// Retrieve the ticket record.
 try {
-    $ticket = $client->getObject();
-    print_r($ticket);
+    $virtualGuests = $client->getVirtualGuests();
+    print("Id, Hostname, Datacenter, Ip Address\n");
+    foreach ($virtualGuests as $guest) {
+        $guestClient = SoapClient::getClient('SoftLayer_Virtual_Guest', $guest->id, $apiUsername, $apiKey);
+        $ipAddress = $guestClient->getPrimaryIpAddress();
+        print($guest->id . ", " . $guest->hostname . ", " . $guest->datacenter->longName . ", " . $ipAddress . "\n");
+        break;
+    }
 } catch (\Exception $e) {
-    die('Unable to retrieve ticket record: ' . $e->getMessage());
-}
-
-// Now update the ticket.
-$update = new \stdClass();
-$update->entry = 'Hello!';
-
-try {
-    $update = $client->addUpdate($update);
-    echo "Updated ticket 123456. The new update's id is " . $update[0]->id . '.';
-} catch (\Exception $e) {
-    die('Unable to update ticket: ' . $e->getMessage());
+    die('Unable to retrieve virtual guests: ' . $e->getMessage());
 }
