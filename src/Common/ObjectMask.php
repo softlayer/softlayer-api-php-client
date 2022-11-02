@@ -1,5 +1,6 @@
 <?php
-/**
+
+/*
  * Copyright (c) 2009 - 2010, SoftLayer Technologies, Inc. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,12 +37,12 @@ namespace SoftLayer\Common;
  * API calls. This one is a bit easier to use. For example, to declare a new
  * object mask using \stdClass enter:
  *
- * $objectMask = new StdClass();
- * $objectMask->datacenter = new StdClass();
- * $objectMask->serverRoom = new StdClass();
- * $objectMask->provisionDate = new StdClass();
- * $objectMask->softwareComponents = new StdClass();
- * $objectMask->softwareComponents->passwords = new StdClass();
+ * $objectMask = new \stdClass();
+ * $objectMask->datacenter = new \stdClass();
+ * $objectMask->serverRoom = new \stdClass();
+ * $objectMask->provisionDate = new \stdClass();
+ * $objectMask->softwareComponents = new \stdClass();
+ * $objectMask->softwareComponents->passwords = new \stdClass();
  *
  * Building an object mask using ObjectMask is a bit easier to
  * type:
@@ -64,13 +65,14 @@ namespace SoftLayer\Common;
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
  * @copyright   Copyright (c) 2009 - 2022, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/article/License
+ *
  * @see         SoapClient::setObjectMask()
  * @see         XmlRpcClient::setObjectMask()
  */
 class ObjectMask
 {
     /**
-     * Define an object mask value
+     * Define an object mask value.
      *
      * @param string $var
      */

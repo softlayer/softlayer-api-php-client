@@ -1,5 +1,7 @@
 # A SoftLayer API PHP client.
 
+[![Build Status](https://travis-ci.org/softlayer/softlayer-api-php-client.svg?branch=master)](https://travis-ci.org/softlayer/softlayer-api-php-client)
+
 ## Warning
 
 ```
@@ -24,7 +26,9 @@ Making API calls using the `\SoftLayer\SoapClient` is done in the following step
 
 Once your method is executed you may continue using the same client if you need to connect to the same service or define another client object if you wish to work with multiple services at once.
 
+
 The most up to date version of this library can be found on the SoftLayer github public repositories: [https://github.com/softlayer/softlayer-api-php-client](https://github.com/softlayer/softlayer-api-php-client) . Any issues using this library, please open a [Github Issue](https://github.com/softlayer/softlayer-api-php-client/issues)
+
 
 ## System Requirements
 
