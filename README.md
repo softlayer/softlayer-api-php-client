@@ -41,7 +41,7 @@ A valid API username and key are required to call the SoftLayer API. A connectio
 
 Install the SoftLayer API client using [Composer](https://getcomposer.org/).
 ```bash
-composer require softlayer/softlayer-api-php-client:~2.0.0@master
+composer require softlayer/softlayer-api-php-client:~2.0.0
 ```
 
 ## Usage
