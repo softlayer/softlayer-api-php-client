@@ -1,15 +1,10 @@
 # A SoftLayer API PHP client.
 
-[![Build Status](https://travis-ci.org/softlayer/softlayer-api-php-client.svg?branch=master)](https://travis-ci.org/softlayer/softlayer-api-php-client)
+![Build Status](https://github.com/softlayer/softlayer-api-php-client/actions/workflows/test.yml/badge.svg)
 
 ## Warning
 
-```
-The latest version 1.x is not backwards-compatible.
-It is necessary to update scripts to function properly with the new version.
-```
-
-Use [v1.2.0](https://github.com/softlayer/softlayer-api-php-client/releases/tag/v1.2) for older PHP versions. [v2.0.0](https://github.com/softlayer/softlayer-api-php-client/releases/tag/v2.0.0) for php 8.1 or higher.
+Use [v1.2.0](https://github.com/softlayer/softlayer-api-php-client/releases/tag/v1.2) for older PHP versions (php < 8.0) . [v2.0.0](https://github.com/softlayer/softlayer-api-php-client/releases/tag/v2.0.0) for php 8.0 or higher.
 
 [PHP 8.0 removed XMLRPC](https://php.watch/versions/8.0/xmlrpc) as a built in extension. As such, it is no longer required as part of the composer file in this project. The XmlRpcClient still exists here if you need it, but we assume most users are using the SoapClient. If there are any issues with this [Let us know on github](https://github.com/softlayer/softlayer-api-php-client/issues)
 

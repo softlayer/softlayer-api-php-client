@@ -5,9 +5,6 @@ namespace SoftLayer\Tests;
 use PHPUnit\Framework\TestCase;
 use SoftLayer\SoapClient;
 
-/**
- * @author Javier Spagnoletti <phansys@gmail.com>
- */
 class SoapClientTest extends TestCase
 {
 

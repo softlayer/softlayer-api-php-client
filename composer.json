@@ -2,7 +2,7 @@
     "name": "softlayer/softlayer-api-php-client",
     "description": "SoftLayer API PHP client",
     "keywords": ["softlayer"],
-    "homepage": "http://sldn.softlayer.com/article/PHP",
+    "homepage": "https://sldn.softlayer.com/php/",
     "license": "MIT",
     "authors": [
         {

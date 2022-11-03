@@ -523,7 +523,7 @@ class SoapClient extends \SoapClient
     /**
      * Returns the service name
      * 
-     * @return array
+     * @return string
      */
     public function getServiceName()
     {
@@ -533,7 +533,7 @@ class SoapClient extends \SoapClient
     /**
      * Returns the endpoint URL
      * 
-     * @return array
+     * @return string
      */
     public function getEndpointUrl()
     {
