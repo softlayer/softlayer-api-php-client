@@ -1,51 +1,129 @@
 <?php
 
-/*
- * Copyright (c) 2009 - 2010, SoftLayer Technologies, Inc. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *  * Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *  * Neither SoftLayer Technologies, Inc. nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
 namespace SoftLayer\Tests;
 
 use PHPUnit\Framework\TestCase;
 use SoftLayer\SoapClient;
 
-/**
- * @author Javier Spagnoletti <phansys@gmail.com>
- */
 class SoapClientTest extends TestCase
 {
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage There was an error querying the SoftLayer API: Invalid API token.
-     */
-    public function testSoapClientException()
+
+    public function testGetClient()
     {
         $client = SoapClient::getClient('SoftLayer_Ticket', 123456, 'apiUsername', 'apiKey');
-
-        $client->getObject();
+        $headers = $client->getHeaders();
+        $this->assertEquals('apiUsername', $headers['authenticate']->data->username);
+        $this->assertEquals('apiKey', $headers['authenticate']->data->apiKey);
+        $this->assertEquals(123456, $headers['SoftLayer_TicketInitParameters']->data->id);
     }
+
+    public function testGetClientDefaults()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket');
+        $headers = $client->getHeaders();
+        $this->assertEquals('set me', $headers['authenticate']->data->username);
+        $this->assertEquals('set me', $headers['authenticate']->data->apiKey);
+        $this->assertFalse(array_key_exists('SoftLayer_TicketInitParameters', $headers));
+    }
+
+    public function testGetClientNoService()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Please provide a SoftLayer API service name.');
+        $client = SoapClient::getClient('', 123456, 'apiUsername', 'apiKey');
+    }
+
+    public function testGetClientNoEndpoint()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Please provide a valid API endpoint.');
+        $client = SoapClient::getClient('SoftLayer_Account', 123456, 'apiUsername', 'apiKey', $endpointUrl=' ');
+    }
+
+    public function testSetObjectMask()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket', 123456, 'apiUsername', 'apiKey');
+        $mask = "mask[id,test]";
+        $client->setObjectMask($mask);
+        $headers = $client->getHeaders();
+        $this->assertEquals($mask, $headers['SoftLayer_ObjectMask']->data->mask);
+    }
+
+    public function testSetObjectMaskClass()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket', 123456, 'apiUsername', 'apiKey');
+        $mask = new \SoftLayer\Common\ObjectMask();
+        $mask->id;
+        $mask->username;
+        $client->setObjectMask($mask);
+        $headers = $client->getHeaders();
+
+        $this->assertEquals($mask, $headers['SoftLayer_TicketObjectMask']->data->mask);
+    }
+
+    public function testSetObjecFilter()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket', 123456, 'apiUsername', 'apiKey');
+        $filter = new \stdClass();
+        $filter->test1 = new \stdClass();
+        $filter->test1->operation = "testFilter";
+        $client->setObjectFilter($filter);
+        $headers = $client->getHeaders();
+        $this->assertEquals("testFilter", $headers['SoftLayer_TicketObjectFilter']->data->test1->operation);
+    }
+
+    public function testSetAuthentication()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket');
+        $headers = $client->getHeaders();
+        $this->assertEquals('set me', $headers['authenticate']->data->username);
+        $this->assertEquals('set me', $headers['authenticate']->data->apiKey);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Please provide a SoftLayer API key.');
+        $client->setAuthentication('username1', '');
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Please provide a SoftLayer API username.');
+        $client->setAuthentication(null, 'apikey2');
+
+        $client->setAuthentication('username1', 'apikey2');
+        $this->assertEquals('username1', $headers['authenticate']->data->username);
+        $this->assertEquals('apikey2', $headers['authenticate']->data->apiKey);
+    }
+
+    public function testRemoveHeader()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket');
+        $headers = $client->getHeaders();
+        $this->assertTrue(array_key_exists('authenticate', $headers));
+        $client->removeHeader('authenticate');
+        $headers = $client->getHeaders();
+        $this->assertFalse(array_key_exists('authenticate', $headers));
+    }
+
+    public function testSetInitParameters()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket');
+        $headers = $client->getHeaders();
+        $this->assertFalse(array_key_exists('SoftLayer_TicketInitParameters', $headers));;
+        $client->setInitParameter(999);
+        $headers = $client->getHeaders();
+        $this->assertTrue(array_key_exists('authenticate', $headers));
+        $this->assertEquals(999, $headers['SoftLayer_TicketInitParameters']->data->id);
+    }
+
+    public function testSetResultLimit()
+    {
+        $client = SoapClient::getClient('SoftLayer_Ticket');
+        $headers = $client->getHeaders();
+        $this->assertFalse(array_key_exists('resultLimit', $headers));;
+        $client->setResultLimit(111, 999);
+        $headers = $client->getHeaders();
+        $this->assertTrue(array_key_exists('resultLimit', $headers));
+        $this->assertEquals(111, $headers['resultLimit']->data->limit);
+        $this->assertEquals(999, $headers['resultLimit']->data->offset);
+    }
+
 }
+

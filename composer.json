@@ -2,7 +2,7 @@
     "name": "softlayer/softlayer-api-php-client",
     "description": "SoftLayer API PHP client",
     "keywords": ["softlayer"],
-    "homepage": "http://sldn.softlayer.com/article/PHP",
+    "homepage": "https://sldn.softlayer.com/php/",
     "license": "MIT",
     "authors": [
         {
@@ -11,8 +11,7 @@
         }
     ],
     "require": {
-        "php": "^5.3|^7.0",
-        "ext-xmlrpc": "*",
+        "php": ">=8.0",
         "ext-soap": "*"
     },
     "autoload": {
@@ -26,15 +25,12 @@
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        },
         "config": {
             "sort-packages": true
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.13|^2.0",
-        "phpunit/phpunit": "^5.4.3|^6.0|^7.0"
+        "friendsofphp/php-cs-fixer": ">=3.13.0",
+        "phpunit/phpunit": ">=9.0"
     }
 }

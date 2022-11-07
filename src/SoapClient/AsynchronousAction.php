@@ -141,7 +141,7 @@ class AsynchronousAction
     protected $_socket;
 
     /**
-     * Perform an asynchronous SoftLayer SOAP call.
+     * Perform an asynchronous SoftLayer SOAP call
      *
      * Create a raw socket connection to the URL specified by the
      * SoapClient class and send SOAP HTTP headers and request XML to
@@ -175,7 +175,7 @@ class AsynchronousAction
             'Connection: close',
         );
 
-        if ('https' === $protocol) {
+        if ($protocol === 'https') {
             $host = 'ssl://'.$host;
             $port = 443;
         } else {
@@ -185,12 +185,12 @@ class AsynchronousAction
         $data = implode("\r\n", $headers)."\r\n\r\n".$request."\r\n";
         $this->_socket = fsockopen($host, $port, $errorNumber, $errorMessage);
 
-        if (false === $this->_socket) {
+        if ($this->_socket === false) {
             $this->_socket = null;
             throw new \Exception('Unable to make an asynchronous SoftLayer API call: '.$errorNumber.': '.$errorMessage);
         }
 
-        if (false === fwrite($this->_socket, $data)) {
+        if (fwrite($this->_socket, $data) === false) {
             throw new \Exception('Unable to write data to an asynchronous SoftLayer API call.');
         }
     }

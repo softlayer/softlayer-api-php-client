@@ -57,16 +57,13 @@ namespace SoftLayer\Common;
  * making your SoftLayer API calls.
  *
  * For more on object mask usage in the SoftLayer API please see
- * http://sldn.softlayer.com/article/Using_Object_Masks_in_the_SoftLayer_API.
+ * https://sldn.softlayer.com/article/object-masks/ .
  *
  * The most up to date version of this library can be found on the SoftLayer
- * github public repositories: http://github.com/softlayer/ . Please post to
- * the SoftLayer forums <http://forums.softlayer.com/> or open a support ticket
- * in the SoftLayer customer portal if you have any questions regarding use of
- * this library.
+ * github public repositories: http://github.com/softlayer/ . 
  *
  * @author      SoftLayer Technologies, Inc. <sldn@softlayer.com>
- * @copyright   Copyright (c) 2009 - 2010, Softlayer Technologies, Inc
+ * @copyright   Copyright (c) 2009 - 2022, Softlayer Technologies, Inc
  * @license     http://sldn.softlayer.com/article/License
  *
  * @see         SoapClient::setObjectMask()
